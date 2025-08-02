@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-users">
+    <h2>User Management</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Join Date</th>
+                <th>Tests Taken</th>
+                <th>Average Score</th>
+                <th>Last Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ user.tests|length }}</td>
+                <td>
+                    {% if user.tests %}
+                        {{ (user.tests|map(attribute='score')|sum / user.tests|length)|round(1) }}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.tests %}
+                        {{ user.tests|sort(attribute='end_time', reverse=true)|first|attr('end_time')|default('N/A')|string }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

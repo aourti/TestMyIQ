@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="test-container">
+    <h2>IQ Test</h2>
+    <div id="progress-bar">
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+    </div>
+    
+    <div id="question-container">
+        {% for question in questions %}
+        <div class="question" data-id="{{ question.id }}" style="display: none;">
+            <h3>{{ question.text }}</h3>
+            <div class="options">
+                {% for option in question.options %}
+                <div class="option">
+                    <input type="radio" name="q{{ question.id }}" value="{{ option }}" id="q{{ question.id }}_{{ loop.index }}">
+                    <label for="q{{ question.id }}_{{ loop.index }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="navigation-buttons">
+        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+        <button id="next-btn" class="btn btn-primary">Next</button>
+        <button id="finish-btn" class="btn btn-success" style="display: none;">Finish Test</button>
+    </div>
+</div>
+
+<input type="hidden" id="session-id" value="{{ session_id }}">
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let startTime;
+let currentQuestion = 0;
+const questions = document.querySelectorAll('.question');
+const sessionId = document.getElementById('session-id').value;
+
+function showQuestion(index) {
+    questions.forEach(q => q.style.display = 'none');
+    questions[index].style.display = 'block';
+    
+    document.getElementById('prev-btn').disabled = index === 0;
+    document.getElementById('next-btn').style.display = index === questions.length - 1 ? 'none' : 'block';
+    document.getElementById('finish-btn').style.display = index === questions.length - 1 ? 'block' : 'none';
+    
+    updateProgressBar(index);
+    startTime = new Date();
+}
+
+function updateProgressBar(index) {
+    const progress = ((index + 1) / questions.length) * 100;
+    document.querySelector('.progress-bar').style.width = `${progress}%`;
+}
+
+function submitAnswer() {
+    const currentQ = questions[currentQuestion];
+    const questionId = currentQ.dataset.id;
+    const selectedOption = currentQ.querySelector('input:checked');
+    
+    if (selectedOption) {
+        const responseTime = (new Date() - startTime) / 1000;
+        fetch('/test/submit_answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question_id: questionId,
+                answer: selectedOption.value,
+                session_id: sessionId,
+                response_time: responseTime
+            })
+        });
+    }
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+    }
+});
+
+document.getElementById('next-btn').addEventListener('click', () => {
+    if (currentQuestion < questions.length - 1) {
+        submitAnswer();
+        currentQuestion++;
+        showQuestion(currentQuestion);
+    }
+});
+
+document.getElementById('finish-btn').addEventListener('click', () => {
+    submitAnswer();
+    window.location.href = `/test/finish/${sessionId}`;
+});
+
+// Show first question on load
+showQuestion(0);
+</script>
+{% endblock %}

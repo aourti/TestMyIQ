@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-questions">
+    <h2>Manage Questions</h2>
+    
+    <div class="actions mb-4">
+        <a href="{{ url_for('admin.add_question') }}" class="btn btn-primary">Add New Question</a>
+    </div>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Difficulty</th>
+                <th>Question</th>
+                <th>Options</th>
+                <th>Correct Answer</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ question.category }}</td>
+                <td>{{ question.difficulty }}</td>
+                <td>{{ question.text }}</td>
+                <td>{{ question.options|join(', ') }}</td>
+                <td>{{ question.correct_answer }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_question', id=question.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    <form class="d-inline" method="POST" action="{{ url_for('admin.delete_question', id=question.id) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this question?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

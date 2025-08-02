@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="question-form">
+    <h2>{{ 'Edit' if question else 'Add New' }} Question</h2>
+    
+    <form method="POST" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="text" class="form-label">Question Text</label>
+            <textarea class="form-control" id="text" name="text" rows="3" required>{{ question.text if question else '' }}</textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Options</label>
+            <div id="options-container">
+                {% if question %}
+                    {% for option in question.options %}
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="options[]" value="{{ option }}" required>
+                            {% if loop.index > 2 %}
+                                <button type="button" class="btn btn-danger remove-option">×</button>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" name="options[]" required>
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" name="options[]" required>
+                    </div>
+                {% endif %}
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-option">Add Option</button>
+        </div>
+        
+        <div class="mb-3">
+            <label for="correct_answer" class="form-label">Correct Answer</label>
+            <input type="text" class="form-control" id="correct_answer" name="correct_answer" 
+                   value="{{ question.correct_answer if question else '' }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="Verbal Comprehension" {% if question and question.category == 'Verbal Comprehension' %}selected{% endif %}>Verbal Comprehension</option>
+                <option value="Perceptual Reasoning" {% if question and question.category == 'Perceptual Reasoning' %}selected{% endif %}>Perceptual Reasoning</option>
+                <option value="Working Memory" {% if question and question.category == 'Working Memory' %}selected{% endif %}>Working Memory</option>
+                <option value="Processing Speed" {% if question and question.category == 'Processing Speed' %}selected{% endif %}>Processing Speed</option>
+                <option value="Fluid Reasoning" {% if question and question.category == 'Fluid Reasoning' %}selected{% endif %}>Fluid Reasoning</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="difficulty" class="form-label">Difficulty Level</label>
+            <select class="form-select" id="difficulty" name="difficulty" required>
+                <option value="">Select Difficulty</option>
+                <option value="1" {% if question and question.difficulty == 1 %}selected{% endif %}>Easy</option>
+                <option value="2" {% if question and question.difficulty == 2 %}selected{% endif %}>Medium</option>
+                <option value="3" {% if question and question.difficulty == 3 %}selected{% endif %}>Hard</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">{{ 'Update' if question else 'Add' }} Question</button>
+        <a href="{{ url_for('admin.questions') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+document.getElementById('add-option').addEventListener('click', function() {
+    const container = document.getElementById('options-container');
+    const newOption = document.createElement('div');
+    newOption.className = 'input-group mb-2';
+    newOption.innerHTML = `
+        <input type="text" class="form-control" name="options[]" required>
+        <button type="button" class="btn btn-danger remove-option">×</button>
+    `;
+    container.appendChild(newOption);
+});
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-option')) {
+        e.target.parentElement.remove();
+    }
+});
+</script>
+{% endblock %}

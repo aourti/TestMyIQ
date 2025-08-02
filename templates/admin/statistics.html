@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-statistics">
+    <h2>Test Statistics</h2>
+    
+    <div class="overall-stats">
+        <div class="stat-card">
+            <h3>Total Tests Taken</h3>
+            <p class="stat-number">{{ total_tests }}</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Average Score</h3>
+            <p class="stat-number">{{ avg_score }}%</p>
+        </div>
+    </div>
+    
+    <div class="category-stats mt-5">
+        <h3>Performance by Category</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Total Attempts</th>
+                    <th>Success Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in category_stats %}
+                <tr>
+                    <td>{{ stat.category }}</td>
+                    <td>{{ stat.attempts }}</td>
+                    <td>{{ (stat.success_rate * 100)|round(1) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="difficulty-stats mt-5">
+        <h3>Performance by Difficulty</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Difficulty Level</th>
+                    <th>Total Attempts</th>
+                    <th>Success Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in difficulty_stats %}
+                <tr>
+                    <td>Level {{ stat.difficulty }}</td>
+                    <td>{{ stat.attempts }}</td>
+                    <td>{{ (stat.success_rate * 100)|round(1) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Add charts for visualizing statistics
+</script>
+{% endblock %}

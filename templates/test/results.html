@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="results-container">
+    <h2>Test Results</h2>
+    
+    <div class="score-summary">
+        <h3>Your Score: {{ session.score }} / {{ session.total_questions }}</h3>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: {{ (session.score / session.total_questions) * 100 }}%">
+            </div>
+        </div>
+    </div>
+    
+    <div class="statistics">
+        <div class="stat-item">
+            <label>Time Taken:</label>
+            <span>{{ (session.end_time - session.start_time).total_seconds() | round(2) }} seconds</span>
+        </div>
+        
+        <div class="stat-item">
+            <label>Average Response Time:</label>
+            <span>{{ (session.responses | map(attribute='response_time') | sum / session.total_questions) | round(2) }} seconds</span>
+        </div>
+        
+        <div class="stat-item">
+            <label>Accuracy:</label>
+            <span>{{ ((session.score / session.total_questions) * 100) | round(1) }}%</span>
+        </div>
+    </div>
+    
+    <div class="question-review">
+        <h3>Question Review</h3>
+        {% for response in session.responses %}
+        <div class="question-item {{ 'correct' if response.is_correct else 'incorrect' }}">
+            <p class="question-text">{{ response.question.text }}</p>
+            <p class="your-answer">Your answer: {{ response.user_answer }}</p>
+            {% if not response.is_correct %}
+                <p class="correct-answer">Correct answer: {{ response.question.correct_answer }}</p>
+            {% endif %}
+            <p class="response-time">Response time: {{ response.response_time | round(2) }} seconds</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="actions">
+        <a href="{{ url_for('test.start') }}" class="btn btn-primary">Take Another Test</a>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

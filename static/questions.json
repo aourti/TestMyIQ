@@ -1,0 +1,169 @@
+{
+  "Verbal Comprehension": {
+    "easy": [
+      { "id": "vc_e1", "question": "What does 'happy' mean?", "options": ["Sad", "Joyful", "Angry", "Tired"], "correct": 1, "points": 1 },
+      { "id": "vc_e2", "question": "Which word is the opposite of 'hot'?", "options": ["Warm", "Cold", "Wet", "Dry"], "correct": 1, "points": 1 },
+      { "id": "vc_e3", "question": "Complete: Cat is to kitten as dog is to...", "options": ["Puppy", "Cub", "Calf", "Foal"], "correct": 0, "points": 1 },
+      { "id": "vc_e4", "question": "Which of these is a fruit?", "options": ["Carrot", "Broccoli", "Apple", "Potato"], "correct": 2, "points": 1 },
+      { "id": "vc_e5", "question": "What is the main color of the sky on a clear day?", "options": ["Green", "Red", "Blue", "Yellow"], "correct": 2, "points": 1 },
+      { "id": "vc_e6", "question": "Which word means to look at something?", "options": ["Listen", "See", "Smell", "Touch"], "correct": 1, "points": 1 },
+      { "id": "vc_e7", "question": "What is the opposite of 'big'?", "options": ["Large", "Huge", "Small", "Wide"], "correct": 2, "points": 1 },
+      { "id": "vc_e8", "question": "A person who flies a plane is called a...", "options": ["Doctor", "Pilot", "Chef", "Driver"], "correct": 1, "points": 1 },
+      { "id": "vc_e9", "question": "Which of these is a number?", "options": ["Seven", "Apple", "Chair", "Blue"], "correct": 0, "points": 1 },
+      { "id": "vc_e10", "question": "What do you use to write on paper?", "options": ["A spoon", "A fork", "A pen", "A plate"], "correct": 2, "points": 1 },
+      { "id": "vc_e11", "question": "What is the opposite of 'day'?", "options": ["Morning", "Night", "Noon", "Evening"], "correct": 1, "points": 1 },
+      { "id": "vc_e12", "question": "Which animal says 'moo'?", "options": ["Dog", "Cat", "Cow", "Bird"], "correct": 2, "points": 1 }
+    ],
+    "medium": [
+      { "id": "vc_m1", "question": "What does 'meticulous' mean?", "options": ["Careless", "Extremely careful and precise", "Very large", "Quick"], "correct": 1, "points": 2 },
+      { "id": "vc_m2", "question": "Complete the analogy: Painter is to brush as writer is to...", "options": ["Paper", "Pen", "Book", "Reader"], "correct": 1, "points": 2 },
+      { "id": "vc_m3", "question": "Which word does NOT belong?", "options": ["Crimson", "Scarlet", "Azure", "Ruby"], "correct": 2, "points": 2 },
+      { "id": "vc_m4", "question": "What is the opposite of 'abundant'?", "options": ["Plentiful", "Scarce", "Heavy", "Rich"], "correct": 1, "points": 2 },
+      { "id": "vc_m5", "question": "The word 'annual' means...", "options": ["Once a day", "Once a month", "Once a year", "Once a week"], "correct": 2, "points": 2 },
+      { "id": "vc_m6", "question": "What does 'prudent' mean?", "options": ["Reckless", "Wise and careful", "Angry", "Generous"], "correct": 1, "points": 2 },
+      { "id": "vc_m7", "question": "Complete the analogy: Leaf is to tree as petal is to...", "options": ["Flower", "Bush", "Stem", "Root"], "correct": 0, "points": 2 },
+      { "id": "vc_m8", "question": "Which word is a synonym for 'difficult'?", "options": ["Easy", "Simple", "Challenging", "Obvious"], "correct": 2, "points": 2 },
+      { "id": "vc_m9", "question": "What does the prefix 'un-' mean in 'unhappy'?", "options": ["Very", "Not", "Again", "Before"], "correct": 1, "points": 2 },
+      { "id": "vc_m10", "question": "To 'comprehend' something is to...", "options": ["Ignore it", "Understand it", "Forget it", "Dislike it"], "correct": 1, "points": 2 },
+      { "id": "vc_m11", "question": "A 'decade' is a period of how many years?", "options": ["5", "10", "50", "100"], "correct": 1, "points": 2 },
+      { "id": "vc_m12", "question": "What is a 'nocturnal' animal?", "options": ["Active during the day", "Active at night", "Sleeps all the time", "Lives in the water"], "correct": 1, "points": 2 }
+    ],
+    "hard": [
+      { "id": "vc_h1", "question": "What does 'ubiquitous' mean?", "options": ["Rare", "Present everywhere", "Difficult", "Changing"], "correct": 1, "points": 3 },
+      { "id": "vc_h2", "question": "If all A are B, and all B are C, then:", "options": ["Some A are C", "All A are C", "No A are C", "Some C are not A"], "correct": 1, "points": 3 },
+      { "id": "vc_h3", "question": "The word 'ephemeral' most nearly means:", "options": ["Eternal", "Solid", "Short-lived", "Beautiful"], "correct": 2, "points": 3 },
+      { "id": "vc_h4", "question": "What does 'pulchritudinous' mean?", "options": ["Ugly", "Having great physical beauty", "Very intelligent", "Extremely wealthy"], "correct": 1, "points": 3 },
+      { "id": "vc_h5", "question": "What is a 'plethora'?", "options": ["A shortage", "A specific number", "An excess", "A type of disease"], "correct": 2, "points": 3 },
+      { "id": "vc_h6", "question": "The word 'obfuscate' means to...", "options": ["Clarify", "Make obscure or unclear", "Build", "Destroy"], "correct": 1, "points": 3 },
+      { "id": "vc_h7", "question": "What is the meaning of 'anachronistic'?", "options": ["Belonging to a future period", "Chronologically misplaced", "Extremely modern", "Historically accurate"], "correct": 1, "points": 3 },
+      { "id": "vc_h8", "question": "A 'sycophant' is a person who...", "options": ["Acts obsequiously toward someone important", "Is very critical of others", "Lives in solitude", "Is a professional musician"], "correct": 0, "points": 3 },
+      { "id": "vc_h9", "question": "What is a 'laconic' reply?", "options": ["Long and detailed", "Angry and hostile", "Using very few words", "Confusing and vague"], "correct": 2, "points": 3 },
+      { "id": "vc_h10", "question": "To 'ameliorate' a situation is to...", "options": ["Make it worse", "Make it better", "Leave it unchanged", "Analyze it"], "correct": 1, "points": 3 },
+      { "id": "vc_h11", "question": "What does 'esoteric' mean?", "options": ["Understood by everyone", "Intended for a small, specialized audience", "Related to the outdoors", "Simple and straightforward"], "correct": 1, "points": 3 },
+      { "id": "vc_h12", "question": "A 'panacea' is a...", "options": ["Type of poison", "Cure for all diseases", "Serious problem", "A type of musical instrument"], "correct": 1, "points": 3 }
+    ]
+  },
+  "Perceptual Reasoning": {
+    "easy": [
+      { "id": "pr_e1", "type": "pattern", "question": "What comes next? ○ ● ○ ● ○ ?", "options": ["○", "●", "□", "△"], "correct": 1, "points": 1 },
+      { "id": "pr_e2", "type": "sequence", "question": "What number comes next? 2, 4, 6, 8, ?", "options": ["9", "10", "11", "12"], "correct": 1, "points": 1 },
+      { "id": "pr_e3", "type": "pattern", "question": "Complete the pattern: △ △ □ △ △ □ △ △ ?", "options": ["△", "□", "○", "●"], "correct": 1, "points": 1 },
+      { "id": "pr_e4", "type": "sequence", "question": "What comes next in the sequence? A, B, C, D, ?", "options": ["E", "F", "G", "H"], "correct": 0, "points": 1 },
+      { "id": "pr_e5", "type": "pattern", "question": "Which shape is different from the others?", "options": ["Circle", "Square", "Triangle", "Line"], "correct": 3, "points": 1 },
+      { "id": "pr_e6", "type": "sequence", "question": "What number is missing? 1, 2, 3, ?, 5", "options": ["3", "4", "6", "7"], "correct": 1, "points": 1 },
+      { "id": "pr_e7", "type": "pattern", "question": "Which image completes the pattern? → → ↑ → → ?", "options": ["↑", "↓", "←", "→"], "correct": 0, "points": 1 },
+      { "id": "pr_e8", "type": "sequence", "question": "What comes next? 10, 20, 30, 40, ?", "options": ["45", "50", "55", "60"], "correct": 1, "points": 1 },
+      { "id": "pr_e9", "type": "pattern", "question": "Which of these is a 3D shape?", "options": ["Square", "Circle", "Cube", "Triangle"], "correct": 2, "points": 1 },
+      { "id": "pr_e10", "type": "sequence", "question": "Which letter is missing? A, C, E, G, ?", "options": ["H", "I", "J", "K"], "correct": 1, "points": 1 },
+      { "id": "pr_e11", "type": "pattern", "question": "Which of these shapes has four equal sides?", "options": ["Rectangle", "Square", "Triangle", "Circle"], "correct": 1, "points": 1 },
+      { "id": "pr_e12", "type": "sequence", "question": "What comes next? 5, 10, 15, 20, ?", "options": ["25", "30", "35", "40"], "correct": 0, "points": 1 }
+    ],
+    "medium": [
+      { "id": "pr_m1", "type": "sequence", "question": "What number comes next? 2, 4, 8, 16, ?", "options": ["24", "32", "20", "30"], "correct": 1, "points": 2 },
+      { "id": "pr_m2", "type": "sequence", "question": "Find the pattern: 1, 4, 9, 16, 25, ?", "options": ["30", "35", "36", "40"], "correct": 2, "points": 2 },
+      { "id": "pr_m3", "type": "pattern", "question": "In the sequence: 3, 6, 12, 24, ?", "options": ["36", "48", "30", "42"], "correct": 1, "points": 2 },
+      { "id": "pr_m4", "type": "sequence", "question": "What comes next? 1, 1, 2, 3, 5, ?", "options": ["6", "7", "8", "9"], "correct": 2, "points": 2 },
+      { "id": "pr_m5", "type": "matrix", "question": "Which number completes the grid? [[1,2,3],[4,5,6],[7,8,?]]", "options": ["9", "10", "11", "12"], "correct": 0, "points": 2 },
+      { "id": "pr_m6", "type": "pattern", "question": "Which figure is the odd one out?", "options": ["A square with a dot in the center", "A circle with a dot in the center", "A triangle with a dot in the center", "A square with a dot in the corner"], "correct": 3, "points": 2 },
+      { "id": "pr_m7", "type": "sequence", "question": "What letter comes next? Z, Y, X, W, ?", "options": ["U", "V", "A", "B"], "correct": 1, "points": 2 },
+      { "id": "pr_m8", "type": "pattern", "question": "Unscramble the word: 'RAINC'", "options": ["CRANE", "CARNI", "CRANI", "NARIC"], "correct": 0, "points": 2 },
+      { "id": "pr_m9", "type": "sequence", "question": "What number comes next? 81, 27, 9, 3, ?", "options": ["1", "0", "1/3", "3/9"], "correct": 0, "points": 2 },
+      { "id": "pr_m10", "type": "pattern", "question": "Which shape can be created by joining two identical triangles?", "options": ["Circle", "Square", "Pentagon", "Hexagon"], "correct": 1, "points": 2 },
+      { "id": "pr_m11", "type": "sequence", "question": "What comes next? 1, 2, 4, 7, 11, ?", "options": ["15", "16", "17", "18"], "correct": 1, "points": 2 },
+      { "id": "pr_m12", "type": "pattern", "question": "Which 3D shape has no flat faces?", "options": ["Cube", "Pyramid", "Sphere", "Cylinder"], "correct": 2, "points": 2 }
+    ],
+    "hard": [
+      { "id": "pr_h1", "type": "matrix", "question": "Complete the 3x3 pattern where each row and column has unique shapes", "matrix": [["●", "■", "▲"], ["■", "▲", "●"], ["▲", "●", "?"]], "options": ["●", "■", "▲", "♦"], "correct": 1, "points": 3 },
+      { "id": "pr_h2", "type": "sequence", "question": "Find the pattern: 2, 3, 5, 8, 13, ?", "options": ["18", "20", "21", "24"], "correct": 2, "points": 3 },
+      { "id": "pr_h3", "type": "sequence", "question": "What number comes next? 4, 7, 12, 19, 28, ?", "options": ["36", "39", "41", "44"], "correct": 1, "points": 3 },
+      { "id": "pr_h4", "type": "matrix", "question": "A 2D shape is folded along the dotted lines. Which 3D shape does it make?", "options": ["Cube", "Pyramid", "Cylinder", "Sphere"], "correct": 0, "points": 3 },
+      { "id": "pr_h5", "type": "logic", "question": "Which letter, when rotated 180 degrees, becomes a different letter?", "options": ["M", "p", "S", "H"], "correct": 1, "points": 3 },
+      { "id": "pr_h6", "type": "sequence", "question": "What is the next number in the series: 53, 53, 40, 40, 27, 27, ...?", "options": ["14", "12", "27", "53"], "correct": 0, "points": 3 },
+      { "id": "pr_h7", "type": "pattern", "question": "Which of the following words is the odd one out? (Hint: think about their structure)", "options": ["LEVEL", "MADAM", "RACECAR", "PYTHON"], "correct": 3, "points": 3 },
+      { "id": "pr_h8", "type": "matrix", "question": "A cube has letters on each face. If one view shows 'A' on top, 'B' in front, and 'C' to the right, what is on the opposite face of 'B'?", "options": ["D", "E", "F", "Cannot be determined"], "correct": 3, "points": 3 },
+      { "id": "pr_h9", "type": "sequence", "question": "What comes next in the sequence? J, F, M, A, M, J, J, ?", "options": ["A", "S", "O", "N"], "correct": 0, "points": 3 },
+      { "id": "pr_h10", "type": "pattern", "question": "If a piece of paper is folded in half, then in half again, how many sections will there be when unfolded?", "options": ["2", "3", "4", "8"], "correct": 2, "points": 3 },
+      { "id": "pr_h11", "type": "sequence", "question": "What number comes next? 1, 4, 27, 256, ?", "options": ["625", "1024", "3125", "4096"], "correct": 2, "points": 3 },
+      { "id": "pr_h12", "type": "pattern", "question": "Which of these is NOT a Platonic solid?", "options": ["Tetrahedron", "Cube", "Icosahedron", "Pyramid"], "correct": 3, "points": 3 }
+    ]
+  },
+  "Working Memory": {
+    "easy": [
+      { "id": "wm_e1", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 3000, "inputType": "text", "points": 1 },
+      { "id": "wm_e2", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 3000, "inputType": "text", "points": 1 },
+      { "id": "wm_e3", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
+      { "id": "wm_e4", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
+      { "id": "wm_e5", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 4000, "inputType": "text", "points": 1 },
+      { "id": "wm_e6", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 2500, "inputType": "text", "points": 1 }
+    ],
+    "medium": [
+      { "id": "wm_m1", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 4000, "inputType": "text", "points": 2 },
+      { "id": "wm_m2", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 4000, "inputType": "text", "points": 2 },
+      { "id": "wm_m3", "type": "digit-span", "question": "Remember this sequence:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 2 },
+      { "id": "wm_m4", "type": "digit-span", "question": "Remember this sequence:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 2 },
+      { "id": "wm_m5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 4, "displayTime": 4500, "inputType": "text", "points": 2 },
+      { "id": "wm_m6", "type": "digit-span", "question": "Remember this sequence:", "length": 7, "displayTime": 6000, "inputType": "text", "points": 2 }
+    ],
+    "hard": [
+      { "id": "wm_h1", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 3 },
+      { "id": "wm_h2", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 3 },
+      { "id": "wm_h3", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 6000, "inputType": "text", "points": 3 },
+      { "id": "wm_h4", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 7, "displayTime": 7000, "inputType": "text", "points": 3 },
+      { "id": "wm_h5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 7, "displayTime": 6500, "inputType": "text", "points": 3 },
+      { "id": "wm_h6", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 8, "displayTime": 8000, "inputType": "text", "points": 3 }
+    ]
+  },
+  "Processing Speed": {
+    "easy": [
+      { "id": "ps_e1", "type": "symbol-search", "question": "Count how many times '◆' appears: ◆○□◆△◆○◆", "options": ["3", "4", "5", "6"], "correct": 1, "points": 1, "timeLimit": 15 },
+      { "id": "ps_e2", "type": "symbol-search", "question": "Count how many circles (○) appear: ○●○○●○●○", "options": ["3", "4", "5", "6"], "correct": 2, "points": 1, "timeLimit": 15 },
+      { "id": "ps_e3", "type": "symbol-search", "question": "Find the number '7' in this string: 1234567890", "options": ["Found", "Not Found"], "correct": 0, "points": 1, "timeLimit": 10 },
+      { "id": "ps_e4", "type": "symbol-search", "question": "How many times does the letter 'A' appear in 'BANANA'?", "options": ["1", "2", "3", "4"], "correct": 2, "points": 1, "timeLimit": 10 },
+      { "id": "ps_e5", "type": "coding", "question": "Using the key A=1, B=2, C=3, what is the code for 'CAB'?", "options": ["123", "312", "213", "321"], "correct": 1, "points": 1, "timeLimit": 15 },
+      { "id": "ps_e6", "type": "symbol-search", "question": "Which of these words is the longest? 'CAT', 'ELEPHANT', 'DOG'", "options": ["CAT", "ELEPHANT", "DOG"], "correct": 1, "points": 1, "timeLimit": 10 }
+    ],
+    "medium": [
+      { "id": "ps_m1", "type": "coding", "question": "Using A=1, B=2, C=3, D=4, E=5, what is BEAD?", "options": ["2514", "2541", "2154", "2415"], "correct": 0, "points": 2, "timeLimit": 20 },
+      { "id": "ps_m2", "type": "coding", "question": "Using A=1, B=2, C=3, D=4, E=5, what is DECADE?", "options": ["453145", "451345", "453154", "145345"], "correct": 0, "points": 2, "timeLimit": 25 },
+      { "id": "ps_m3", "type": "symbol-search", "question": "Are the two strings identical? 'abcde123' and 'abcde123'", "options": ["Yes", "No"], "correct": 0, "points": 2, "timeLimit": 15 },
+      { "id": "ps_m4", "type": "symbol-search", "question": "Are the two strings identical? 'StRaWbErRy' and 'sTrAwBeRrY'", "options": ["Yes", "No"], "correct": 1, "points": 2, "timeLimit": 15 },
+      { "id": "ps_m5", "type": "complex-search", "question": "Quickly scan the list and identify the duplicate number: 3, 8, 5, 2, 9, 5, 1", "options": ["8", "2", "9", "5"], "correct": 3, "points": 2, "timeLimit": 20 },
+      { "id": "ps_m6", "type": "coding", "question": "If 'APPLE' is coded as 'ELPPA', how is 'BANANA' coded?", "options": ["ANANAB", "ANANBA", "ANABAN", "ANANAB"], "correct": 0, "points": 2, "timeLimit": 30 }
+    ],
+    "hard": [
+      { "id": "ps_h1", "type": "complex-search", "question": "Count letters that appear exactly twice in: MISSISSIPPI", "options": ["0", "1", "2", "3"], "correct": 1, "points": 3, "timeLimit": 15 },
+      { "id": "ps_h2", "type": "complex-search", "question": "How many vowels (A,E,I,O,U) in: ENCYCLOPEDIA", "options": ["4", "5", "6", "7"], "correct": 1, "points": 3, "timeLimit": 20 },
+      { "id": "ps_h3", "type": "coding", "question": "If CAT = 24 (3+1+20), what does DOG equal?", "options": ["25", "26", "27", "28"], "correct": 1, "points": 3, "timeLimit": 30 },
+      { "id": "ps_h4", "type": "complex-search", "question": "In the list 'apple, orange, banana, grape, apple, pear', which word appears more than once?", "options": ["orange", "banana", "apple", "pear"], "correct": 2, "points": 3, "timeLimit": 25 },
+      { "id": "ps_h5", "type": "coding", "question": "If the code for 'WATER' is 'XBUFS', what is the code for 'FIRE'?", "options": ["GJSF", "GJRF", "HJRF", "HJSE"], "correct": 1, "points": 3, "timeLimit": 45 },
+      { "id": "ps_h6", "type": "complex-search", "question": "Which number is the odd one out? 2, 4, 6, 8, 9, 10", "options": ["2", "4", "9", "10"], "correct": 2, "points": 3, "timeLimit": 20 }
+    ]
+  },
+  "Fluid Reasoning": {
+    "easy": [
+      { "id": "fr_e1", "type": "logic", "question": "If all cats are animals, and Fluffy is a cat, what is Fluffy?", "options": ["A dog", "An animal", "A bird", "Unknown"], "correct": 1, "points": 1 },
+      { "id": "fr_e2", "type": "logic", "question": "If it's raining, the ground is wet. The ground is wet. Therefore:", "options": ["It's definitely raining", "It might be raining", "It's not raining", "The sun is shining"], "correct": 1, "points": 1 },
+      { "id": "fr_e3", "type": "logic", "question": "A farmer has 17 sheep and all but 9 die. How many are left?", "options": ["8", "9", "17", "26"], "correct": 1, "points": 1 },
+      { "id": "fr_e4", "type": "logic", "question": "Which weighs more, a pound of feathers or a pound of rocks?", "options": ["Feathers", "Rocks", "They weigh the same", "Cannot be determined"], "correct": 2, "points": 1 },
+      { "id": "fr_e5", "type": "logic", "question": "If a doctor gives you 3 pills and tells you to take one every half hour, how long would they last?", "options": ["30 minutes", "60 minutes", "90 minutes", "120 minutes"], "correct": 1, "points": 1 },
+      { "id": "fr_e6", "type": "logic", "question": "What comes next in the pattern? 1, 3, 5, 7, ...", "options": ["8", "9", "10", "11"], "correct": 1, "points": 1 }
+    ],
+    "medium": [
+      { "id": "fr_m1", "type": "logic", "question": "In a race, you overtake the 2nd place person. What position are you?", "options": ["1st", "2nd", "3rd", "4th"], "correct": 1, "points": 2 },
+      { "id": "fr_m2", "type": "logic", "question": "If 5 machines make 5 widgets in 5 minutes, how long for 100 machines to make 100 widgets?", "options": ["1 minute", "5 minutes", "100 minutes", "500 minutes"], "correct": 1, "points": 2 },
+      { "id": "fr_m3", "type": "logic", "question": "A man is looking at a portrait. Someone asks him whose portrait he is looking at, and he replies: 'Brothers and sisters I have none, but that man's father is my father's son.' Who is in the portrait?", "options": ["His son", "Himself", "His father", "His uncle"], "correct": 0, "points": 2 },
+      { "id": "fr_m4", "type": "logic", "question": "What has an eye, but cannot see?", "options": ["A potato", "A needle", "A storm", "A person"], "correct": 1, "points": 2 },
+      { "id": "fr_m5", "type": "logic", "question": "How many months have 28 days?", "options": ["1", "2", "6", "All 12"], "correct": 3, "points": 2 },
+      { "id": "fr_m6", "type": "logic", "question": "A man builds a house with four sides, and each side has a southern exposure. A big bear walks by. What color is the bear?", "options": ["Brown", "Black", "White", "Grizzly"], "correct": 2, "points": 2 }
+    ],
+    "hard": [
+      { "id": "fr_h1", "type": "logic", "question": "A bat and ball cost $1.10. The bat costs $1 more than the ball. Ball cost?", "options": ["$0.10", "$0.05", "$0.15", "$0.20"], "correct": 1, "points": 3 },
+      { "id": "fr_h2", "type": "logic", "question": "In a group of 30 people, 18 like coffee, 15 like tea, and 8 like both. How many like neither?", "options": ["3", "5", "7", "9"], "correct": 1, "points": 3 },
+      { "id": "fr_h3", "type": "logic", "question": "There are three boxes, one with apples, one with oranges, and one with both. All are mislabeled. You can pick one fruit from one box. Which box do you pick from to label all boxes correctly?", "options": ["The 'apples' box", "The 'oranges' box", "The 'apples and oranges' box", "It's impossible"], "correct": 2, "points": 3 },
+      { "id": "fr_h4", "type": "logic", "question": "What is it that is full of holes but still holds water?", "options": ["A net", "A sponge", "A strainer", "A bottle"], "correct": 1, "points": 3 },
+      { "id": "fr_h5", "type": "logic", "question": "You are in a room with two doors. One leads to certain death and the other to freedom. There are two guards, one by each door. One guard always tells the truth and the other always lies. You can only ask one question to one guard. What do you ask?", "options": ["Which door is freedom?", "Which door would the other guard say leads to freedom?", "Are you the truth-teller?", "Does 1+1=2?"], "correct": 1, "points": 3 },
+      { "id": "fr_h6", "type": "logic", "question": "A lily pad in a pond doubles in size every day. If it takes 48 days for the lily pad to cover the entire pond, how long would it take for the lily pad to cover half the pond?", "options": ["24 days", "36 days", "47 days", "49 days"], "correct": 2, "points": 3 },
+      { "id": "fr_h7", "type": "logic", "question": "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?", "options": ["A dream", "A map", "A book", "A photograph"], "correct": 1, "points": 3 }
+    ]
+  }
+}

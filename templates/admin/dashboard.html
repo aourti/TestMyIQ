@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2>Admin Dashboard</h2>
+    
+    <div class="stats-overview">
+        <div class="stat-card">
+            <h3>Questions</h3>
+            <p class="stat-number">{{ questions_count }}</p>
+            <a href="{{ url_for('admin.questions') }}" class="btn btn-primary">Manage Questions</a>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Users</h3>
+            <p class="stat-number">{{ users_count }}</p>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-primary">Manage Users</a>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Tests Taken</h3>
+            <p class="stat-number">{{ tests_count }}</p>
+            <a href="{{ url_for('admin.statistics') }}" class="btn btn-primary">View Statistics</a>
+        </div>
+    </div>
+    
+    <div class="recent-activity">
+        <h3>Recent Test Sessions</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in recent_tests %}
+                <tr>
+                    <td>{{ test.user.username }}</td>
+                    <td>{{ test.score }}/{{ test.total_questions }}</td>
+                    <td>{{ test.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if test.end_time %}
+                            Completed
+                        {% else %}
+                            In Progress
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
