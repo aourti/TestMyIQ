@@ -1,6 +1,6 @@
-# IQ Test Flask Application
+# TestMyIQ.ai Flask Application
 
-This is a simple Flask application for an IQ Test. The application serves an HTML page with questions, handles form submissions, and displays results.
+This is a modern Flask application for cognitive assessment and IQ testing. The application serves adaptive tests, handles user authentication, and provides detailed analytics.
 
 ## How to Run
 
@@ -16,11 +16,11 @@ This is a simple Flask application for an IQ Test. The application serves an HTM
 ## Project Structure
 
 - `app.py`: The main Flask application.
-- `templates/index.html`: The HTML template for the IQ Test.
+- `templates/index.html`: The HTML template for the cognitive assessment platform.
 - `.github/copilot-instructions.md`: Custom instructions for GitHub Copilot.
 
 ## Features
 
-- Serve an HTML page for the IQ Test.
+- Serve adaptive cognitive assessment tests with personalized difficulty.
 - Handle form submissions.
 - Display results (to be implemented).

@@ -3,41 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ Test App</title>
+    <title>{% block title %}TestMyIQ.ai - Adaptive Cognitive Assessment{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/styles.css" rel="stylesheet">
     <link href="/css/profile.css" rel="stylesheet">
+    <link href="/css/auth.css" rel="stylesheet">
+    
+    <!-- Additional fonts and icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link href="/css/enhanced.css" rel="stylesheet">
+    <link href="/css/visibility-fixes.css" rel="stylesheet">
+    <style>
+        /* Global enhancements */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Enhanced navbar */
+        .navbar {
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #333 !important;
+        }
+        
+        .navbar-brand::before {
+            content: '🧠';
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem !important;
+            color: #495057 !important;
+        }
+        
+        .nav-link:hover {
+            color: #667eea !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        /* User menu enhancement */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #495057 !important;
+        }
+        
+        .user-menu:hover {
+            color: #667eea !important;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        /* Dropdown menu styling */
+        .dropdown-menu {
+            border: none !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+            border-radius: 12px !important;
+            padding: 0.5rem 0 !important;
+            margin-top: 0.5rem !important;
+            z-index: 1050 !important;
+            min-width: 200px !important;
+            background-color: white !important;
+            position: absolute !important;
+        }
+        
+        .dropdown-menu.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.5rem !important;
+            color: #495057 !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa !important;
+            color: #4285f4 !important;
+            text-decoration: none !important;
+        }
+        
+        .dropdown-item i {
+            margin-right: 0.5rem !important;
+            width: 16px !important;
+        }
+        
+        .dropdown-divider {
+            margin: 0.5rem 0 !important;
+            border-color: #e9ecef !important;
+        }
+        
+        /* Fix navbar dropdown positioning */
+        .navbar .dropdown {
+            position: relative !important;
+        }
+        
+        .navbar .dropdown-menu {
+            position: absolute !important;
+            top: 100% !important;
+            right: 0 !important;
+            left: auto !important;
+            transform: none !important;
+        }
+        
+        /* Ensure dropdown is clickable and visible */
+        .dropdown-menu {
+            pointer-events: auto !important;
+        }
+        
+        /* Fix navbar overflow issues */
+        .navbar {
+            overflow: visible !important;
+        }
+        
+        .navbar-nav {
+            overflow: visible !important;
+        }
+        
+        .nav-item.dropdown {
+            overflow: visible !important;
+        }
+        
+        /* Ensure dropdown can extend beyond container */
+        .container {
+            overflow: visible !important;
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: relative;
+        }
+        
+        .notification-badge::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #ff4757;
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .notification-badge.has-notifications::after {
+            display: block;
+        }
+        
+        /* Loading animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+        
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-brain {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+        
+        .custom-toast {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+        
+        .toast-success .toast-icon { color: #2ecc71; }
+        .toast-error .toast-icon { color: #e74c3c; }
+        .toast-info .toast-icon { color: #3498db; }
+        
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-brain">
+            <span style="font-size: 80px;">🧠</span>
+        </div>
+    </div>
+    
+    <!-- Enhanced Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('home') }}">IQ Test App</a>
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                TestMyIQ.ai
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('test.start') }}">Take Test</a>
+                            <a class="nav-link" href="{{ url_for('test.start') }}">
+                                <i class="bi bi-play-circle"></i> Take Test
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile.index') }}">Profile</a>
+                            <a class="nav-link" href="{{ url_for('profile.index') }}">
+                                <i class="bi bi-graph-up"></i> Progress
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link notification-badge" href="#" id="notificationBtn">
+                                <i class="bi bi-bell"></i>
+                            </a>
                         </li>
                         {% if current_user.is_admin %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin</a>
+                            <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                                <i class="bi bi-shield-lock"></i> Admin
+                            </a>
                         </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle user-menu" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="user-avatar">{{ current_user.username[0].upper() }}</span>
+                                <span class="d-none d-md-inline">{{ current_user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{{ url_for('profile.index') }}">
+                                    <i class="bi bi-person"></i> My Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="showSettings()">
+                                    <i class="bi bi-gear"></i> Settings
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        <!-- Backup logout link for mobile/accessibility -->
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                            <a class="nav-link btn btn-primary text-white ms-2" href="{{ url_for('auth.register') }}">
+                                Get Started
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -45,11 +385,228 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <main>
         {% block content %}{% endblock %}
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scrollTop">
+        <i class="bi bi-arrow-up"></i>
     </div>
 
+    <!-- Footer -->
+    <footer class="mt-5 py-4 bg-light">
+        <div class="container text-center">
+            <p class="mb-2" style="color: #495057;">© 2025 TestMyIQ.ai. Empowering minds, one test at a time.</p>
+            <div class="social-links">
+                <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-linkedin"></i></a>
+                <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Page loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('pageLoader').classList.add('hidden');
+            }, 500);
+        });
+
+        // Scroll to top functionality
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `custom-toast toast-${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️',
+                warning: '⚠️'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <div>
+                    <strong>${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+                    <p class="mb-0">${message}</p>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Check for notifications
+        {% if current_user.is_authenticated %}
+        function checkNotifications() {
+            // This would fetch notifications from your API
+            const hasNew = Math.random() > 0.7; // Demo: 30% chance of new notifications
+            const notifBtn = document.getElementById('notificationBtn');
+            if (hasNew && notifBtn) {
+                notifBtn.classList.add('has-notifications');
+            }
+        }
+        
+        // Initialize dropdown functionality
+        function initDropdown() {
+            const dropdownToggle = document.getElementById('userDropdown');
+            const dropdownMenu = dropdownToggle?.nextElementSibling;
+            
+            if (dropdownToggle && dropdownMenu) {
+                dropdownToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Toggle dropdown
+                    const isShown = dropdownMenu.classList.contains('show');
+                    
+                    // Close all other dropdowns
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                    
+                    // Toggle current dropdown
+                    if (!isShown) {
+                        dropdownMenu.classList.add('show');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    } else {
+                        dropdownMenu.classList.remove('show');
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
+        
+        // Initialize dropdown after Bootstrap loads
+        setTimeout(initDropdown, 100);
+        
+        // Check notifications on load and periodically
+        checkNotifications();
+        setInterval(checkNotifications, 60000); // Check every minute
+        {% endif %}
+
+        // Settings modal (placeholder)
+        function showSettings() {
+            showToast('Settings panel coming soon!', 'info');
+        }
+
+        // Welcome message for new sessions
+        {% if current_user.is_authenticated %}
+        if (!sessionStorage.getItem('welcomed')) {
+            sessionStorage.setItem('welcomed', 'true');
+            showToast('Welcome back, {{ current_user.username }}!', 'success');
+        }
+        {% endif %}
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K for quick search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                showToast('Quick search coming soon!', 'info');
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                // Close any open modals
+                const modals = document.querySelectorAll('.modal.show');
+                modals.forEach(modal => {
+                    const bsModal = bootstrap.Modal.getInstance(modal);
+                    if (bsModal) bsModal.hide();
+                });
+            }
+        });
+
+        // Add smooth page transitions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add fade-in animation to main content
+            const main = document.querySelector('main');
+            main.style.opacity = '0';
+            main.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                main.style.transition = 'all 0.5s ease';
+                main.style.opacity = '1';
+                main.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Progress saving indicator
+        let saveTimeout;
+        function showSaveIndicator() {
+            clearTimeout(saveTimeout);
+            const indicator = document.createElement('div');
+            indicator.className = 'save-indicator';
+            indicator.innerHTML = '<i class="bi bi-cloud-check"></i> Saved';
+            indicator.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: #2ecc71;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            document.body.appendChild(indicator);
+            
+            saveTimeout = setTimeout(() => {
+                indicator.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => indicator.remove(), 300);
+            }, 2000);
+        }
+
+        // Export for use in other scripts
+        window.appUtils = {
+            showToast,
+            showSaveIndicator
+        };
+    </script>
+    
     {% block scripts %}{% endblock %}
+<script src="/js/enhanced.js"></script>    
 </body>
 </html>

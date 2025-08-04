@@ -1,52 +1,160 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="results-container">
-    <h2>Test Results</h2>
-    
-    <div class="score-summary">
-        <h3>Your Score: {{ session.score }} / {{ session.total_questions }}</h3>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" 
-                 style="width: {{ (session.score / session.total_questions) * 100 }}%">
+<div class="container">
+    <div class="results-container">
+        <div class="text-center mb-4">
+            <h2 class="display-4">🎯 Test Results</h2>
+            <p class="lead text-muted">Here's how you performed on your cognitive assessment</p>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="score-summary card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">Your Score</h3>
+                        <h2 class="display-3 text-primary">{{ session.score or 0 }} / {{ session.total_questions }}</h2>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar bg-primary" role="progressbar" 
+                                 style="width: {{ ((session.score or 0) / session.total_questions * 100) | round(1) }}%">
+                                {{ ((session.score or 0) / session.total_questions * 100) | round(1) }}%
+                            </div>
+                        </div>
+                        <p class="text-muted">Accuracy Rate</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="statistics">
-        <div class="stat-item">
-            <label>Time Taken:</label>
-            <span>{{ (session.end_time - session.start_time).total_seconds() | round(2) }} seconds</span>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stat-card card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock text-info mb-2" style="font-size: 2rem;"></i>
+                        <h5>Time Taken</h5>
+                        <h4 class="text-info">
+                            {% if session.end_time and session.start_time %}
+                                {{ ((session.end_time - session.start_time).total_seconds() / 60) | round(1) }} min
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="stat-card card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line text-success mb-2" style="font-size: 2rem;"></i>
+                        <h5>Questions Answered</h5>
+                        <h4 class="text-success">{{ session.responses | length }}</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="stat-card card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-target text-warning mb-2" style="font-size: 2rem;"></i>
+                        <h5>Correct Answers</h5>
+                        <h4 class="text-warning">{{ session.score or 0 }}</h4>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="stat-item">
-            <label>Average Response Time:</label>
-            <span>{{ (session.responses | map(attribute='response_time') | sum / session.total_questions) | round(2) }} seconds</span>
+        {% if session.responses %}
+        <div class="question-review">
+            <h3 class="mb-3">📋 Question Review</h3>
+            <div class="row">
+                {% for response in session.responses %}
+                <div class="col-12 mb-3">
+                    <div class="card question-item {{ 'border-success' if response.is_correct else 'border-danger' }}">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge {{ 'bg-success' if response.is_correct else 'bg-danger' }}">
+                                    {{ '✓ Correct' if response.is_correct else '✗ Incorrect' }}
+                                </span>
+                                {% if response.question.category %}
+                                    <span class="badge bg-primary ms-2">{{ response.question.category }}</span>
+                                {% endif %}
+                                {% if response.question.difficulty %}
+                                    <span class="badge bg-secondary ms-1">{{ response.question.difficulty.upper() }}</span>
+                                {% endif %}
+                            </div>
+                            {% if response.response_time %}
+                                <small class="text-muted">{{ response.response_time | round(1) }}s</small>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">{{ response.question.question_text or 'Question text not available' }}</h6>
+                            <p class="card-text">
+                                <strong>Your answer:</strong> {{ response.user_answer }}
+                            </p>
+                            {% if not response.is_correct and response.question.correct_answer %}
+                                <p class="card-text text-success">
+                                    <strong>Correct answer:</strong> 
+                                    {% if response.question.options %}
+                                        {% if response.question.correct_answer | int < response.question.options | length %}
+                                            {{ response.question.options[response.question.correct_answer | int] }}
+                                        {% else %}
+                                            {{ response.question.correct_answer }}
+                                        {% endif %}
+                                    {% else %}
+                                        {{ response.question.correct_answer }}
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+        {% endif %}
         
-        <div class="stat-item">
-            <label>Accuracy:</label>
-            <span>{{ ((session.score / session.total_questions) * 100) | round(1) }}%</span>
+        <div class="actions text-center mt-4">
+            <a href="{{ url_for('test.start') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-redo"></i> Take Another Test
+            </a>
+            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
         </div>
-    </div>
-    
-    <div class="question-review">
-        <h3>Question Review</h3>
-        {% for response in session.responses %}
-        <div class="question-item {{ 'correct' if response.is_correct else 'incorrect' }}">
-            <p class="question-text">{{ response.question.text }}</p>
-            <p class="your-answer">Your answer: {{ response.user_answer }}</p>
-            {% if not response.is_correct %}
-                <p class="correct-answer">Correct answer: {{ response.question.correct_answer }}</p>
-            {% endif %}
-            <p class="response-time">Response time: {{ response.response_time | round(2) }} seconds</p>
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="actions">
-        <a href="{{ url_for('test.start') }}" class="btn btn-primary">Take Another Test</a>
-        <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
     </div>
 </div>
+
+<style>
+.results-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.score-summary {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.question-item {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.question-item.border-success {
+    border-left: 4px solid #28a745 !important;
+}
+
+.question-item.border-danger {
+    border-left: 4px solid #dc3545 !important;
+}
+</style>
 {% endblock %}

@@ -26,7 +26,8 @@ def register():
         db.session.commit()
         
         login_user(user)
-        return redirect(url_for('test.start'))
+        flash('Welcome! Your account has been created successfully.')
+        return redirect(url_for('home'))  # Redirect to home instead of test
         
     return render_template('auth/register.html')
 
@@ -40,7 +41,11 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('test.start'))
+            if next_page:
+                return redirect(next_page)
+            else:
+                # Redirect to home/profile instead of immediately starting test
+                return redirect(url_for('home'))
             
         flash('Invalid username or password')
         

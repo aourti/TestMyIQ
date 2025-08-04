@@ -151,7 +151,7 @@ const categoryData = {
     labels: {{ category_stats|map(attribute='category')|list|tojson }},
     datasets: [{
         label: 'Success Rate',
-        data: {{ category_stats|map(attribute='success_rate')|list|map('float')|map('multiply', 100)|list|tojson }},
+        data: {{ category_stats|map(attribute='success_rate')|list|tojson }},
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgb(75, 192, 192)',
         borderWidth: 1
@@ -185,7 +185,7 @@ const difficultyData = {
     labels: difficultyLabels,
     datasets: [{
         label: 'Success Rate',
-        data: {{ difficulty_stats|map(attribute='success_rate')|list|map('float')|map('multiply', 100)|list|tojson }},
+        data: {{ difficulty_stats|map(attribute='success_rate')|list|tojson }},
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
         borderColor: 'rgb(153, 102, 255)',
         borderWidth: 1

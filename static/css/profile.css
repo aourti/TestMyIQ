@@ -10,6 +10,19 @@
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid #eee;
+    color: white;
+}
+
+.profile-header h2 {
+    color: white !important;
+}
+
+.profile-header p {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.profile-header .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .stat-cards {

@@ -18,9 +18,14 @@ def index():
     # Get overall statistics
     total_tests = len(test_history)
     if total_tests > 0:
-        avg_score = sum(test.score for test in test_history) / total_tests
-        best_score = max(test.score for test in test_history)
-        total_questions_attempted = sum(test.total_questions for test in test_history)
+        # Filter out None scores for calculations
+        valid_scores = [test.score for test in test_history if test.score is not None]
+        if valid_scores:
+            avg_score = sum(valid_scores) / len(valid_scores)
+            best_score = max(valid_scores)
+        else:
+            avg_score = best_score = 0
+        total_questions_attempted = sum(test.total_questions or 0 for test in test_history)
     else:
         avg_score = best_score = total_questions_attempted = 0
 
@@ -34,6 +39,16 @@ def index():
      .filter(TestSession.user_id == current_user.id)\
      .group_by(Question.category).all()
 
+    # Convert to list with percentage values
+    category_stats_list = [
+        {
+            'category': stat.category,
+            'attempts': stat.attempts,
+            'success_rate': float(stat.success_rate or 0) * 100
+        }
+        for stat in category_stats
+    ]
+
     # Get difficulty-wise performance
     difficulty_stats = db.session.query(
         Question.difficulty,
@@ -43,6 +58,16 @@ def index():
      .join(TestSession, TestSession.id == Response.test_session_id)\
      .filter(TestSession.user_id == current_user.id)\
      .group_by(Question.difficulty).all()
+
+    # Convert to list with percentage values
+    difficulty_stats_list = [
+        {
+            'difficulty': stat.difficulty,
+            'attempts': stat.attempts,
+            'success_rate': float(stat.success_rate or 0) * 100
+        }
+        for stat in difficulty_stats
+    ]
 
     # Get response time statistics
     avg_response_time = db.session.query(
@@ -54,8 +79,8 @@ def index():
     scores_trend = [
         {
             'date': test.start_time.strftime('%Y-%m-%d'),
-            'score': test.score,
-            'total': test.total_questions
+            'score': test.score or 0,
+            'total': test.total_questions or 0
         }
         for test in test_history
     ]
@@ -65,13 +90,14 @@ def index():
     for test in test_history[:5]:  # Last 5 tests
         responses = Response.query.filter_by(test_session_id=test.id).all()
         correct_responses = sum(1 for r in responses if r.is_correct)
-        avg_time = sum(r.response_time for r in responses) / len(responses) if responses else 0
+        response_times = [r.response_time for r in responses if r.response_time is not None]
+        avg_time = sum(response_times) / len(response_times) if response_times else 0
         
         recent_tests.append({
             'date': test.start_time.strftime('%Y-%m-%d %H:%M'),
-            'score': test.score,
-            'total': test.total_questions,
-            'percentage': (test.score / test.total_questions * 100) if test.total_questions > 0 else 0,
+            'score': test.score or 0,
+            'total': test.total_questions or 0,
+            'percentage': (test.score / test.total_questions * 100) if test.score and test.total_questions and test.total_questions > 0 else 0,
             'avg_response_time': round(avg_time, 2),
             'correct_responses': correct_responses
         })
@@ -82,8 +108,8 @@ def index():
                          avg_score=round(avg_score, 2),
                          best_score=best_score,
                          total_questions=total_questions_attempted,
-                         category_stats=category_stats,
-                         difficulty_stats=difficulty_stats,
+                         category_stats=category_stats_list,
+                         difficulty_stats=difficulty_stats_list,
                          avg_response_time=round(avg_response_time, 2),
                          scores_trend=json.dumps(scores_trend),
                          recent_tests=recent_tests)

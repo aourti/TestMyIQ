@@ -1,810 +1,574 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adaptive IQ Assessment - Professional Edition</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="{{ url_for('static', filename='js/app.js') }}" type="module"></script>
-</head>
-<body>
-    <div class="container">
-        <div class="timer" id="timer">Time: 0:00</div>
-        <div class="countdown-timer" id="countdownTimer"></div>
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Override base styles for proper layout and visibility */
+    body {
+        background: #f5f7fa !important;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Main content container */
+    .index-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* All text should be dark */
+    p, span, div, li, h1, h2, h3, h4, h5, h6 {
+        color: #333;
+    }
+    
+    /* Welcome message styles */
+    .welcome-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-header * {
+        color: white !important;
+    }
+    
+    .welcome-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    .greeting {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .user-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stat-mini {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .stat-mini h4 {
+        margin: 0;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    
+    .stat-mini p {
+        margin: 0;
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    
+    /* Achievement badges */
+    .achievements {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .badge-custom {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85em;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    /* Daily quote fix */
+    .daily-quote {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #667eea;
+        font-style: italic;
+        position: relative;
+        color: #555;
+    }
+    
+    .daily-quote p {
+        color: #555;
+        margin: 0;
+    }
+    
+    .daily-quote::before {
+        content: '"';
+        font-size: 3em;
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        color: #667eea;
+        opacity: 0.3;
+    }
+    
+    /* Quick actions fix */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .action-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        color: #333;
+    }
+    
+    .action-card h3,
+    .action-card p {
+        color: #333;
+        margin: 0;
+    }
+    
+    .action-card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.3em;
+    }
+    
+    .action-card p {
+        font-size: 0.9em;
+        opacity: 0.8;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .action-card.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .action-card.primary h3,
+    .action-card.primary p {
+        color: white !important;
+    }
+    
+    .action-card .icon {
+        font-size: 2.5em;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Progress visualization */
+    .progress-overview {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+    
+    .progress-item {
+        margin-bottom: 1.5rem;
+    }
+    
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .progress {
+        height: 10px;
+        background: #e9ecef;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: width 1s ease;
+        border-radius: 5px;
+    }
+    
+    /* Fix test information section */
+    .question {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        color: #333;
+    }
+    
+    .question h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+    
+    .question p,
+    .question li {
+        color: #555;
+        line-height: 1.6;
+    }
+    
+    .adaptive-info {
+        background: #e7f3ff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #667eea;
+    }
+    
+    .adaptive-info h4 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .adaptive-info p {
+        color: #555;
+        margin: 0;
+    }
+    
+    /* Leaderboard preview */
+    .leaderboard-preview {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+    
+    .leaderboard-preview h3 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .leaderboard-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e9ecef;
+        color: #333;
+    }
+    
+    .leaderboard-item:last-child {
+        border-bottom: none;
+    }
+    
+    .rank {
+        font-weight: bold;
+        color: #667eea;
+        margin-right: 1rem;
+    }
+    
+    /* Animations */
+    .fade-in {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem;
+            padding: 25px;
+        }
         
-        <div class="header">
-            <h1>Adaptive IQ Assessment</h1>
-            <p class="subtitle">Professional Cognitive Evaluation System</p>
+        .greeting {
+            font-size: 1.5em;
+        }
+        
+        .user-stats {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<div class="index-container fade-in">
+    {% if current_user.is_authenticated %}
+    <!-- Personalized Welcome Header -->
+    <div class="welcome-header">
+        <div class="greeting" id="greeting">
+            <!-- Greeting will be set by JavaScript -->
+        </div>
+        <p>Ready to challenge your mind today?</p>
+        
+        {% if user_stats %}
+        <div class="user-stats">
+            <div class="stat-mini">
+                <h4>{{ user_stats.total_tests }}</h4>
+                <p>Tests Taken</p>
+            </div>
+            <div class="stat-mini">
+                <h4>{{ user_stats.avg_score }}%</h4>
+                <p>Average Score</p>
+            </div>
+            <div class="stat-mini">
+                <h4>{{ user_stats.best_score }}%</h4>
+                <p>Best Score</p>
+            </div>
+            <div class="stat-mini">
+                <h4>{{ user_stats.streak }}</h4>
+                <p>Day Streak 🔥</p>
+            </div>
         </div>
         
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-            <div class="progress-text" id="progressText">0%</div>
+        <div class="achievements">
+            {% if user_stats.total_tests >= 5 %}
+            <span class="badge-custom">🏆 Dedicated Learner</span>
+            {% endif %}
+            {% if user_stats.best_score >= 90 %}
+            <span class="badge-custom">⭐ High Achiever</span>
+            {% endif %}
+            {% if user_stats.streak >= 7 %}
+            <span class="badge-custom">🔥 Week Warrior</span>
+            {% endif %}
+            {% if user_stats.perfect_scores > 0 %}
+            <span class="badge-custom">💯 Perfectionist</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Daily Motivational Quote -->
+    <div class="daily-quote">
+        <p id="daily-quote">Loading inspiration...</p>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="action-card primary" onclick="window.location.href='{{ url_for('test.start') }}'">
+            <div class="icon">🧠</div>
+            <h3>Start New Test</h3>
+            <p>Begin your adaptive IQ assessment</p>
         </div>
         
-        <!-- Introduction Section -->
-        <div class="section active" id="intro">
-            <div class="question">
-                <h3>Welcome to the Adaptive IQ Assessment</h3>
-                
-                <div id="resumePrompt" class="resume-prompt" style="display: none;">
-                    <p><strong>Previous session detected!</strong></p>
-                    <p>Would you like to continue from where you left off?</p>
-                    <button class="btn" onclick="resumeTest()">Resume Test</button>
-                    <button class="btn btn-secondary" onclick="startNewTest()">Start New Test</button>
-                </div>
-                
-                <div class="adaptive-info">
-                    <h4>🎯 Adaptive Testing Technology</h4>
-                    <p>This assessment uses Computerized Adaptive Testing (CAT) to precisely measure your cognitive abilities. Questions automatically adjust to your performance level, providing a more accurate and efficient evaluation.</p>
-                </div>
-                
-                <p style="font-size: 1.1em; line-height: 1.6; color: #555; margin-bottom: 20px;">
-                    This comprehensive assessment measures five key cognitive domains:
-                </p>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin: 10px 0;">✓ <strong>Verbal Comprehension</strong> - Language and verbal reasoning</li>
-                    <li style="margin: 10px 0;">✓ <strong>Perceptual Reasoning</strong> - Visual-spatial processing</li>
-                    <li style="margin: 10px 0;">✓ <strong>Working Memory</strong> - Information retention and manipulation</li>
-                    <li style="margin: 10px 0;">✓ <strong>Processing Speed</strong> - Cognitive efficiency</li>
-                    <li style="margin: 10px 0;">✓ <strong>Fluid Reasoning</strong> - Novel problem solving</li>
-                </ul>
-                
-                <div class="age-selector">
-                    <label for="ageSelect">Select your age:</label>
-                    <select id="ageSelect">
-                        <option value="12">12 years</option>
-                        <option value="13">13 years</option>
-                        <option value="14">14 years</option>
-                        <option value="15">15 years</option>
-                        <option value="16">16 years</option>
-                    </select>
-                </div>
-                
-                <p style="font-size: 1.1em; line-height: 1.6; color: #555; margin-top: 20px;">
-                    <strong>Important Instructions:</strong>
-                </p>
-                <ul style="margin-left: 20px;">
-                    <li>Find a quiet environment without distractions</li>
-                    <li>The test adapts to your responses - expect varying difficulty</li>
-                    <li>Your progress is automatically saved</li>
-                    <li>Some sections are timed - work efficiently</li>
-                    <li>Estimated duration: 45-90 minutes</li>
-                </ul>
-            </div>
-            <div class="navigation">
-                <button class="btn" onclick="initializeTest()">Begin Assessment</button>
-            </div>
+        <div class="action-card" onclick="window.location.href='{{ url_for('profile.index') }}'">
+            <div class="icon">📊</div>
+            <h3>View Progress</h3>
+            <p>Track your improvement over time</p>
         </div>
         
-        <!-- Loading Section -->
-        <div class="section" id="loading">
-            <div class="loading">
-                <h3>Loading Question Bank...</h3>
-                <div class="spinner"></div>
-                <p>Preparing your personalized assessment</p>
-            </div>
-        </div>
-        
-        <!-- Test Container -->
-        <div class="section" id="test-container"></div>
-        
-        <!-- Results Section -->
-        <div class="section" id="results">
-            <div class="results">
-                <h2>Your Assessment Results</h2>
-                <div class="score-circle">
-                    <svg width="200" height="200">
-                        <circle cx="100" cy="100" r="90" fill="none" stroke="#e0e0e0" stroke-width="20"/>
-                        <circle id="scoreCircle" cx="100" cy="100" r="90" fill="none" stroke="url(#gradient)" stroke-width="20" stroke-dasharray="565.48" stroke-dashoffset="565.48" stroke-linecap="round"/>
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="score-text" id="finalScore">0</div>
-                </div>
-                
-                <div class="category-scores" id="categoryScores"></div>
-                
-                <div class="interpretation" id="interpretation"></div>
-                
-                <div class="navigation">
-                    <button class="btn" onclick="generateReport()">Download Detailed Report</button>
-                    <button class="btn btn-secondary" onclick="clearAndRestart()">Take Test Again</button>
-                </div>
-            </div>
+        <div class="action-card" onclick="showPracticeMode()">
+            <div class="icon">🎯</div>
+            <h3>Practice Mode</h3>
+            <p>Focus on specific categories</p>
         </div>
     </div>
     
-    <script>
-        // Adaptive Testing Engine
-        class AdaptiveTestEngine {
-            constructor() {
-                this.questionBank = {};
-                this.currentDifficulty = {};
-                this.responses = [];
-                this.domainScores = {};
-                this.initialized = false;
-            }
-            
-            async loadQuestionBank() {
-                try {
-                    // Fetch questions from the external JSON file
-                    const response = await fetch('questions.json');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    this.questionBank = await response.json();
-                    this.initialized = true;
-                    return true;
-                } catch (error) {
-                    console.error('Failed to load questions.json:', error);
-                    // Display an error message to the user
-                    const loadingSection = document.getElementById('loading');
-                    if(loadingSection){
-                        loadingSection.innerHTML = `
-                            <div class="loading">
-                                <h3>Error Loading Test</h3>
-                                <p>Could not load the question bank. Please ensure the 'questions.json' file is in the same directory as this HTML file and try again.</p>
-                            </div>
-                        `;
-                    }
-                    return false;
-                }
-            }
-            
-            getNextQuestion(domain, previousCorrect = null) {
-                if (!this.currentDifficulty[domain]) {
-                    this.currentDifficulty[domain] = 'medium';
-                }
-                
-                let difficulty = this.currentDifficulty[domain];
-                
-                // Adaptive logic
-                if (previousCorrect !== null) {
-                    if (previousCorrect && difficulty !== 'hard') {
-                        difficulty = difficulty === 'easy' ? 'medium' : 'hard';
-                    } else if (!previousCorrect && difficulty !== 'easy') {
-                        difficulty = difficulty === 'hard' ? 'medium' : 'easy';
-                    }
-                    this.currentDifficulty[domain] = difficulty;
-                }
-                
-                const questions = this.questionBank[domain][difficulty];
-                const availableQuestions = questions.filter(q => 
-                    !this.responses.find(r => r.questionId === q.id)
-                );
-                
-                if (availableQuestions.length === 0) {
-                    // Try other difficulties if no questions are left at the current one
-                    const difficulties = ['easy', 'medium', 'hard'].filter(d => d !== difficulty);
-                    for (const d of difficulties) {
-                        const altQuestions = this.questionBank[domain][d].filter(q => 
-                            !this.responses.find(r => r.questionId === q.id)
-                        );
-                        if (altQuestions.length > 0) {
-                            const randomIndex = Math.floor(Math.random() * altQuestions.length);
-                            return { ...altQuestions[randomIndex], difficulty: d };
-                        }
-                    }
-                    return null; // No questions left in this domain
-                }
-                
-                // Randomly select from available questions
-                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-                return { ...availableQuestions[randomIndex], difficulty };
-            }
-            
-            recordResponse(domain, questionId, correct, responseTime, difficulty) {
-                this.responses.push({
-                    domain,
-                    questionId,
-                    correct,
-                    responseTime,
-                    difficulty,
-                    timestamp: Date.now()
-                });
-                
-                if (!this.domainScores[domain]) {
-                    this.domainScores[domain] = {
-                        correct: 0,
-                        total: 0,
-                        points: 0,
-                        difficulties: { easy: 0, medium: 0, hard: 0 }
-                    };
-                }
-                
-                this.domainScores[domain].total++;
-                if (correct) {
-                    this.domainScores[domain].correct++;
-                    this.domainScores[domain].points += this.getDifficultyPoints(difficulty);
-                }
-                this.domainScores[domain].difficulties[difficulty]++;
-            }
-            
-            getDifficultyPoints(difficulty) {
-                const points = { easy: 1, medium: 2, hard: 3 };
-                return points[difficulty] || 1;
-            }
-            
-            shouldContinueDomain(domain) {
-                const score = this.domainScores[domain];
-                if (!score || score.total < 3) return true;
-                
-                // Stop if we have at least 10 questions or a clear pattern
-                if (score.total >= 10) return false;
-                
-                // Stop if consistent performance
-                const recentResponses = this.responses
-                    .filter(r => r.domain === domain)
-                    .slice(-3);
-                
-                if (recentResponses.length < 3) return true;
+    {% if recent_performance %}
+    <!-- Progress Overview -->
+    <div class="progress-overview">
+        <h3>Your Progress This Week</h3>
+        {% for category, data in recent_performance.items() %}
+        <div class="progress-item">
+            <div class="progress-label">
+                <span>{{ category }}</span>
+                <span>{{ data.score }}%</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ data.score }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <!-- Non-authenticated view with same styling -->
+    <div class="welcome-header">
+        <div class="greeting">Welcome to TestMyIQ.ai!</div>
+        <p>Discover your cognitive potential with our adaptive assessment</p>
+    </div>
+    
+    <div class="daily-quote">
+        <p>"The mind is not a vessel to be filled, but a fire to be kindled." - Plutarch</p>
+    </div>
+    
+    <div class="quick-actions">
+        <div class="action-card primary" onclick="window.location.href='{{ url_for('auth.register') }}'">
+            <div class="icon">🚀</div>
+            <h3>Get Started</h3>
+            <p>Create your free account</p>
+        </div>
+        
+        <div class="action-card" onclick="window.location.href='{{ url_for('auth.login') }}'">
+            <div class="icon">🔑</div>
+            <h3>Sign In</h3>
+            <p>Continue your journey</p>
+        </div>
+        
+        <div class="action-card" onclick="showDemo()">
+            <div class="icon">👁️</div>
+            <h3>View Demo</h3>
+            <p>See how it works</p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Test Information -->
+    <div class="question">
+        <h3>About Our Adaptive IQ Assessment</h3>
+        
+        <div class="adaptive-info">
+            <h4>🎯 Adaptive Testing Technology</h4>
+            <p>This assessment uses Computerized Adaptive Testing (CAT) to precisely measure your cognitive abilities. Questions automatically adjust to your performance level, providing a more accurate and efficient evaluation.</p>
+        </div>
+        
+        <p style="font-size: 1.1em; line-height: 1.6; color: #555; margin-bottom: 20px;">
+            This comprehensive assessment measures five key cognitive domains:
+        </p>
+        <ul style="list-style: none; padding-left: 0;">
+            <li style="margin: 10px 0;">✓ <strong>Verbal Comprehension</strong> - Language and verbal reasoning</li>
+            <li style="margin: 10px 0;">✓ <strong>Perceptual Reasoning</strong> - Visual-spatial processing</li>
+            <li style="margin: 10px 0;">✓ <strong>Working Memory</strong> - Information retention and manipulation</li>
+            <li style="margin: 10px 0;">✓ <strong>Processing Speed</strong> - Cognitive efficiency</li>
+            <li style="margin: 10px 0;">✓ <strong>Fluid Reasoning</strong> - Novel problem solving</li>
+        </ul>
+    </div>
+    
+    {% if current_user.is_authenticated and leaderboard %}
+    <!-- Leaderboard Preview -->
+    <div class="leaderboard-preview">
+        <h3>Top Performers This Week</h3>
+        {% for entry in leaderboard[:5] %}
+        <div class="leaderboard-item">
+            <div>
+                <span class="rank">#{{ loop.index }}</span>
+                <span>{{ entry.username }}</span>
+            </div>
+            <span>{{ entry.score }}%</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
 
-                const allCorrect = recentResponses.every(r => r.correct);
-                const allIncorrect = recentResponses.every(r => !r.correct);
-                
-                if ((allCorrect && this.currentDifficulty[domain] === 'hard') ||
-                    (allIncorrect && this.currentDifficulty[domain] === 'easy')) {
-                    return false;
-                }
-                
-                return true;
-            }
-        }
-        
-        // Global variables
-        let testEngine = new AdaptiveTestEngine();
-        let currentDomain = '';
-        let currentQuestion = null;
-        let domainIndex = 0;
-        let startTime;
-        let timerInterval;
-        let questionTimer;
-        let questionStartTime;
-        let userAge = 12;
-        const domains = ["Verbal Comprehension", "Perceptual Reasoning", "Working Memory", "Processing Speed", "Fluid Reasoning"];
-        
-        // Check for saved session on load
-        window.addEventListener('load', () => {
-            checkSavedSession();
-        });
-        
-        function checkSavedSession() {
-            const savedState = localStorage.getItem('iqTestState');
-            if (savedState) {
-                document.getElementById('resumePrompt').style.display = 'block';
-            }
-        }
-        
-        function resumeTest() {
-            const savedState = JSON.parse(localStorage.getItem('iqTestState'));
-            if (savedState) {
-                // Restore state
-                testEngine.responses = savedState.responses || [];
-                testEngine.domainScores = savedState.domainScores || {};
-                testEngine.currentDifficulty = savedState.currentDifficulty || {};
-                domainIndex = savedState.domainIndex || 0;
-                userAge = savedState.userAge || 12;
-                startTime = Date.now() - (savedState.elapsedTime || 0);
-                
-                // Load questions and continue
-                initializeTest(true);
-            }
-        }
-        
-        function startNewTest() {
-            localStorage.removeItem('iqTestState');
-            document.getElementById('resumePrompt').style.display = 'none';
-        }
-        
-        function clearAndRestart() {
-            localStorage.removeItem('iqTestState');
-            location.reload();
-        }
-        
-        async function initializeTest(resuming = false) {
-            if (!resuming) {
-                userAge = parseInt(document.getElementById('ageSelect').value);
-            }
-            
-            document.getElementById('intro').classList.remove('active');
-            document.getElementById('loading').classList.add('active');
-            
-            // Load question bank
-            const loaded = await testEngine.loadQuestionBank();
-            if(!loaded) return; // Stop if questions failed to load
-            
+<script>
+// Personalized greeting based on time of day
+function setGreeting() {
+    const hour = new Date().getHours();
+    const greetingEl = document.getElementById('greeting');
+    let timeGreeting;
+    
+    if (hour < 5) {
+        timeGreeting = "🌙 Burning the midnight oil";
+    } else if (hour < 12) {
+        timeGreeting = "☀️ Good morning";
+    } else if (hour < 17) {
+        timeGreeting = "🌤️ Good afternoon";
+    } else if (hour < 20) {
+        timeGreeting = "🌅 Good evening";
+    } else {
+        timeGreeting = "🌙 Good night";
+    }
+    
+    {% if current_user.is_authenticated %}
+    greetingEl.textContent = `${timeGreeting}, {{ current_user.username }}!`;
+    {% else %}
+    greetingEl.textContent = `${timeGreeting}!`;
+    {% endif %}
+}
+
+// Daily motivational quotes
+const quotes = [
+    "Intelligence is the ability to adapt to change. - Stephen Hawking",
+    "The mind is everything. What you think you become. - Buddha",
+    "Learning never exhausts the mind. - Leonardo da Vinci",
+    "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice. - Brian Herbert",
+    "Education is not the learning of facts, but the training of the mind to think. - Albert Einstein",
+    "The beautiful thing about learning is that no one can take it away from you. - B.B. King",
+    "Anyone who stops learning is old, whether at twenty or eighty. - Henry Ford",
+    "The more that you read, the more things you will know. - Dr. Seuss"
+];
+
+function setDailyQuote() {
+    const quoteEl = document.getElementById('daily-quote');
+    const today = new Date().getDay();
+    quoteEl.textContent = quotes[today % quotes.length];
+}
+
+// Initialize personalization
+document.addEventListener('DOMContentLoaded', () => {
+    setGreeting();
+    setDailyQuote();
+    
+    // Animate progress bars
+    setTimeout(() => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
             setTimeout(() => {
-                document.getElementById('loading').classList.remove('active');
-                document.getElementById('test-container').classList.add('active');
-                
-                if (!resuming) {
-                    startTime = Date.now();
-                }
-                startTimer();
-                
-                if (resuming && domainIndex < domains.length) {
-                    currentDomain = domains[domainIndex];
-                    showNextQuestion();
-                } else {
-                    domainIndex = 0; // Reset for new test
-                    showSectionIntro();
-                }
-            }, 1000);
-        }
-        
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const minutes = Math.floor(elapsed / 60);
-                const seconds = elapsed % 60;
-                document.getElementById('timer').textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
-        }
-        
-        function showSectionIntro() {
-            if (domainIndex >= domains.length) {
-                showResults();
-                return;
-            }
-            
-            currentDomain = domains[domainIndex];
-            const html = `
-                <div class="question">
-                    <h2>${currentDomain}</h2>
-                    <p class="question-text">${getSectionDescription(currentDomain)}</p>
-                    <div class="adaptive-info">
-                        <p><strong>Adaptive Testing:</strong> Questions will adjust to your performance level.</p>
-                        <p>Starting with medium difficulty questions.</p>
-                    </div>
-                </div>
-                <div class="navigation">
-                    <button class="btn" onclick="startSection()">Begin Section</button>
-                </div>
-            `;
-            document.getElementById('test-container').innerHTML = html;
-        }
-        
-        function getSectionDescription(domain) {
-            const descriptions = {
-                "Verbal Comprehension": "This section measures your understanding of language, vocabulary, and verbal reasoning.",
-                "Perceptual Reasoning": "This section tests your ability to analyze visual information and recognize patterns.",
-                "Working Memory": "This section tests your ability to remember and manipulate information. You'll need to type responses from memory.",
-                "Processing Speed": "This section measures how quickly and accurately you can process information. Work as fast as you can!",
-                "Fluid Reasoning": "This section tests your ability to solve new problems using logic and reasoning."
-            };
-            return descriptions[domain];
-        }
-        
-        function startSection() {
-            showNextQuestion();
-        }
-        
-        function showNextQuestion() {
-            clearInterval(questionTimer);
-            
-            // Check if we should continue this domain
-            if (testEngine.domainScores[currentDomain] && !testEngine.shouldContinueDomain(currentDomain)) {
-                domainIndex++;
-                saveState();
-                showSectionIntro();
-                return;
-            }
-            
-            // Get adaptive question
-            const lastResponse = testEngine.responses
-                .filter(r => r.domain === currentDomain)
-                .pop();
-            
-            currentQuestion = testEngine.getNextQuestion(
-                currentDomain,
-                lastResponse ? lastResponse.correct : null
-            );
-            
-            if (!currentQuestion) {
-                domainIndex++;
-                saveState();
-                showSectionIntro();
-                return;
-            }
-            
-            questionStartTime = Date.now();
-            displayQuestion(currentQuestion);
-        }
-        
-        function displayQuestion(question) {
-            if (question.type && question.type.includes('digit-span') && question.length) {
-                const sequence = generateRandomSequence(question.length);
-                question.sequence = sequence; 
-                let correctAnswer = sequence.replace(/-/g, '');
-                if (question.type === 'digit-span-reverse') {
-                    correctAnswer = correctAnswer.split('').reverse().join('');
-                }
-                question.correctAnswer = correctAnswer;
-            }
-
-            let html = `
-                <div class="question">
-                    <h3>${currentDomain}</h3>
-                    <span class="difficulty-indicator difficulty-${question.difficulty}">
-                        ${question.difficulty.toUpperCase()} DIFFICULTY
-                    </span>
-            `;
-            
-            if (question.type === 'matrix') {
-                html += `
-                    <p class="question-text">${question.question}</p>
-                    <div class="visual-container">
-                        <div class="pattern-grid">
-                `;
-                question.matrix.forEach(row => {
-                    row.forEach(cell => {
-                        html += `<div class="pattern-cell ${cell === '?' ? 'missing' : ''}">${cell}</div>`;
-                    });
-                });
-                html += `</div></div>`;
-            } else if (question.type && question.type.includes('digit-span')) {
-                html += `
-                    <p class="question-text">${question.question}</p>
-                    <div class="memory-display" id="memoryDisplay">${question.sequence}</div>
-                    <div id="memoryInput" style="display: none;">
-                        <input type="text" class="text-input" id="textAnswer" placeholder="Enter the sequence" 
-                               onkeyup="enableSubmitForText()" autocomplete="off">
-                    </div>
-                `;
-                setTimeout(() => {
-                    const display = document.getElementById('memoryDisplay');
-                    const input = document.getElementById('memoryInput');
-                    if (display && input) {
-                        display.textContent = '';
-                        display.classList.add('hidden');
-                        input.style.display = 'block';
-                        document.getElementById('textAnswer').focus();
-                    }
-                }, question.displayTime);
-            } else {
-                html += `<p class="question-text">${question.question}</p>`;
-            }
-            
-            if (!question.inputType || question.inputType !== 'text') {
-                html += '<div class="options">';
-                question.options.forEach((option, index) => {
-                    html += `<div class="option" onclick="selectAnswer(${index})">${option}</div>`;
-                });
-                html += '</div>';
-            }
-            
-            html += '</div>';
-            
-            const isTextInput = question.inputType === 'text';
-            html += `
-                <div class="navigation">
-                    <button class="btn" id="submitBtn" onclick="submitAnswer()" 
-                            ${isTextInput ? 'disabled' : ''}>Submit Answer</button>
-                </div>
-            `;
-            
-            document.getElementById('test-container').innerHTML = html;
-            updateProgress();
-            
-            if (question.timeLimit) {
-                let timeLeft = question.timeLimit;
-                const countdownDiv = document.getElementById('countdownTimer');
-                countdownDiv.style.display = 'block';
-                countdownDiv.textContent = timeLeft;
-                
-                questionTimer = setInterval(() => {
-                    timeLeft--;
-                    countdownDiv.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(questionTimer);
-                        countdownDiv.style.display = 'none';
-                        submitAnswer(); // Auto-submit on time out
-                    }
-                }, 1000);
-            }
-        }
-        
-        function selectAnswer(index) {
-            document.querySelectorAll('.option').forEach((opt, i) => {
-                opt.classList.toggle('selected', i === index);
-            });
-            document.getElementById('submitBtn').disabled = false;
-        }
-        
-        function enableSubmitForText() {
-            const input = document.getElementById('textAnswer');
-            document.getElementById('submitBtn').disabled = !input.value.trim();
-        }
-        
-        function submitAnswer() {
-            clearInterval(questionTimer);
-            document.getElementById('countdownTimer').style.display = 'none';
-            document.getElementById('submitBtn').disabled = true;
-            
-            let isCorrect = false;
-            const responseTime = Date.now() - questionStartTime;
-            let selectedElement;
-            
-            if (currentQuestion.inputType === 'text') {
-                const userAnswer = document.getElementById('textAnswer').value.replace(/[-\s]/g, '');
-                isCorrect = userAnswer === currentQuestion.correctAnswer;
-                selectedElement = document.getElementById('textAnswer').parentElement;
-            } else {
-                selectedElement = document.querySelector('.option.selected');
-                if (selectedElement) {
-                    const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedElement);
-                    isCorrect = selectedIndex === currentQuestion.correct;
-                }
-            }
-
-            // Remove any existing feedback
-            const existingFeedback = document.querySelector('.feedback-text');
-            if (existingFeedback) {
-                existingFeedback.remove();
-            }
-
-            // Create and show feedback
-            const feedback = document.createElement('div');
-            feedback.className = `feedback-text ${isCorrect ? 'correct' : 'incorrect'}`;
-            feedback.innerHTML = isCorrect ? 
-                '<span style="font-size: 1.2em;">✓</span> Correct!' : 
-                '<span style="font-size: 1.2em;">✗</span> Incorrect';
-            document.body.appendChild(feedback);
-
-            // Add animation class to selected option
-            if (selectedElement) {
-                selectedElement.classList.remove('selected');
-                selectedElement.classList.add(isCorrect ? 'correct' : 'incorrect');
-            }
-            
-            // Record the response
-            testEngine.recordResponse(
-                currentDomain,
-                currentQuestion.id,
-                isCorrect,
-                responseTime,
-                currentQuestion.difficulty
-            );
-            
-            saveState();
-            
-            // Wait for animation to complete before showing next question
-            setTimeout(() => {
-                if (feedback) {
-                    feedback.remove();
-                }
-                showNextQuestion();
-            }, 1200);
-        }
-        
-        function updateProgress() {
-            const totalResponses = testEngine.responses.length;
-            const estimatedTotal = domains.length * 7; // Adjusted average
-            const progress = Math.min(100, Math.round((totalResponses / estimatedTotal) * 100));
-            
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = progress + '%';
-        }
-        
-        function saveState() {
-            const state = {
-                responses: testEngine.responses,
-                domainScores: testEngine.domainScores,
-                currentDifficulty: testEngine.currentDifficulty,
-                domainIndex: domainIndex,
-                userAge: userAge,
-                elapsedTime: Date.now() - startTime
-            };
-            localStorage.setItem('iqTestState', JSON.stringify(state));
-        }
-        
-        function showResults() {
-            clearInterval(timerInterval);
-            document.getElementById('test-container').classList.remove('active');
-            document.getElementById('results').classList.add('active');
-            localStorage.removeItem('iqTestState');
-            
-            const results = calculateAdaptiveIQ();
-            const iq = results.fsiq;
-            document.getElementById('finalScore').textContent = iq;
-            
-            const circle = document.getElementById('scoreCircle');
-            const circumference = 2 * Math.PI * 90;
-            const offset = circumference - (circumference * ((iq - 40) / 120));
-            
-            setTimeout(() => {
-                circle.style.strokeDashoffset = offset;
-                circle.style.transition = 'stroke-dashoffset 2s ease-out';
+                bar.style.width = width;
             }, 100);
-            
-            let categoryHTML = '';
-            Object.keys(results.domainScores).forEach(domain => {
-                const domainScore = results.domainScores[domain];
-                const data = testEngine.domainScores[domain] || { correct: 0, total: 1, difficulties: {easy:0,medium:0,hard:0} };
-                const accuracy = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
-                
-                categoryHTML += `
-                    <div class="category-card">
-                        <h4>${domain}</h4>
-                        <div class="category-score">${domainScore}</div>
-                        <p>Accuracy: ${accuracy}%</p>
-                        <p style="font-size: 0.9em; color: #666;">
-                            E:${data.difficulties.easy} M:${data.difficulties.medium} H:${data.difficulties.hard}
-                        </p>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('categoryScores').innerHTML = categoryHTML;
-            document.getElementById('interpretation').innerHTML = generateAdaptiveInterpretation(iq, results.domainScores);
-        }
-        
-        function calculateAdaptiveIQ() {
-            const domainScores = {};
-            let totalPoints = 0;
-            let maxPossiblePoints = 0;
-            
-            domains.forEach(domain => {
-                const data = testEngine.domainScores[domain];
-                if (!data || data.total === 0) {
-                    domainScores[domain] = 100; // Default if no questions answered
-                    return;
-                }
-                
-                let earnedPoints = 0;
-                let possiblePoints = 0;
-                
-                testEngine.responses
-                    .filter(r => r.domain === domain)
-                    .forEach(response => {
-                        const points = testEngine.getDifficultyPoints(response.difficulty);
-                        possiblePoints += points;
-                        if (response.correct) {
-                            earnedPoints += points;
-                        }
-                    });
-                
-                const percentage = possiblePoints > 0 ? earnedPoints / possiblePoints : 0;
-                
-                let difficultyBonus = 0;
-                if (testEngine.currentDifficulty[domain] === 'hard' && data.correct / data.total > 0.5) {
-                    difficultyBonus = 0.15;
-                } else if (testEngine.currentDifficulty[domain] === 'medium' && data.correct / data.total > 0.6) {
-                    difficultyBonus = 0.05;
-                }
-                
-                const adjustedPercentage = Math.min(1, percentage + difficultyBonus);
-                const zScore = (adjustedPercentage - 0.5) * 3;
-                const domainIQ = Math.round(100 + (zScore * 15));
-                
-                domainScores[domain] = Math.max(70, Math.min(130, domainIQ));
-                
-                totalPoints += earnedPoints;
-                maxPossiblePoints += possiblePoints;
-            });
-            
-            const overallPercentage = maxPossiblePoints > 0 ? totalPoints / maxPossiblePoints : 0.5;
-            
-            let difficultyAdjustment = 0;
-            const difficulties = Object.values(testEngine.currentDifficulty);
-            const hardCount = difficulties.filter(d => d === 'hard').length;
-            const easyCount = difficulties.filter(d => d === 'easy').length;
-            
-            if (hardCount >= 3) difficultyAdjustment = 5;
-            else if (hardCount >= 2) difficultyAdjustment = 3;
-            else if (easyCount >= 3) difficultyAdjustment = -5;
-            else if (easyCount >= 2) difficultyAdjustment = -3;
-            
-            const baseIQ = 85 + (overallPercentage * 60);
-            const fsiq = Math.round(baseIQ + difficultyAdjustment);
-            
-            return {
-                fsiq: Math.max(70, Math.min(145, fsiq)),
-                domainScores: domainScores,
-                overallAccuracy: overallPercentage
-            };
-        }
-        
-        function generateAdaptiveInterpretation(iq, domainScores) {
-            let html = '<h3>Adaptive Testing Results</h3>';
-            
-            const classification = getClassification(iq);
-            const percentile = getPercentile(iq);
-            
-            html += `
-                <p><strong>Full Scale IQ:</strong> ${iq} (${percentile}th percentile)</p>
-                <p><strong>Classification:</strong> ${classification}</p>
-                <p><strong>Age at Testing:</strong> ${userAge} years</p>
-                <p><strong>Test Type:</strong> Computerized Adaptive Testing (CAT)</p>
-            `;
-            
-            html += `<h4 style="margin-top: 20px;">Adaptive Performance Summary</h4><p>The test adapted to your performance across ${testEngine.responses.length} questions:</p><ul>`;
-            
-            Object.keys(testEngine.domainScores).forEach(domain => {
-                const finalDifficulty = testEngine.currentDifficulty[domain] || 'medium';
-                html += `<li><strong>${domain}:</strong> Stabilized at ${finalDifficulty} difficulty</li>`;
-            });
-            
-            html += '</ul>';
-            
-            if (iq >= 130) html += `<p>Your performance indicates exceptionally advanced cognitive abilities.</p>`;
-            else if (iq >= 120) html += `<p>Your performance reflects superior intellectual functioning.</p>`;
-            else if (iq >= 110) html += `<p>Your performance represents high average intellectual ability.</p>`;
-            else if (iq >= 90) html += `<p>Your performance falls within the average range of intellectual functioning.</p>`;
-            else html += `<p>Your performance suggests areas where additional support may be beneficial.</p>`;
-            
-            return html;
-        }
-        
-        function getClassification(iq) {
-            if (iq >= 130) return "Very Superior";
-            if (iq >= 120) return "Superior";
-            if (iq >= 110) return "High Average";
-            if (iq >= 90) return "Average";
-            if (iq >= 80) return "Low Average";
-            if (iq >= 70) return "Borderline";
-            return "Extremely Low";
-        }
-        
-        function getPercentile(iq) {
-            const zScore = (iq - 100) / 15;
-            // Using a standard Normal CDF function
-            const normalCDF = (z) => {
-                const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
-                const sign = z < 0 ? -1 : 1;
-                z = Math.abs(z) / Math.sqrt(2);
-                const t = 1 / (1 + p * z);
-                const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-z * z);
-                return 0.5 * (1 + sign * y);
-            };
-            return Math.round(normalCDF(zScore) * 100);
-        }
-        
-        function generateReport() {
-            const results = calculateAdaptiveIQ();
-            const testDuration = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
-            
-            let report = `ADAPTIVE IQ ASSESSMENT REPORT\n${'='.repeat(50)}\n\n`;
-            report += `Assessment Date: ${new Date().toLocaleDateString()}\n`;
-            report += `Test Duration: ${Math.floor(testDuration / 60)}m ${testDuration % 60}s\n`;
-            report += `Age at Testing: ${userAge} years\nTotal Questions: ${testEngine.responses.length}\n\n`;
-            
-            report += `SUMMARY OF RESULTS\n${'-'.repeat(30)}\n`;
-            report += `Full Scale IQ (FSIQ): ${results.fsiq}\nPercentile Rank: ${getPercentile(results.fsiq)}\nClassification: ${getClassification(results.fsiq)}\n\n`;
-            
-            report += `ADAPTIVE TESTING METRICS\n${'-'.repeat(30)}\n`;
-            Object.keys(testEngine.domainScores).forEach(domain => {
-                const data = testEngine.domainScores[domain];
-                report += `\n${domain}:\n  Final Difficulty: ${testEngine.currentDifficulty[domain] || 'medium'}\n`;
-                report += `  Questions: ${data.total} (E:${data.difficulties.easy} M:${data.difficulties.medium} H:${data.difficulties.hard})\n`;
-                report += `  Accuracy: ${data.total > 0 ? Math.round((data.correct / data.total) * 100) : 'N/A'}%\n`;
-                report += `  Domain Score: ${results.domainScores[domain]}\n`;
-            });
-            
-            report += `\n\nDISCLAIMER\n${'-'.repeat(30)}\nThis assessment provides educational insights only. For clinical or diagnostic purposes, consult a qualified professional.\n`;
-            
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Adaptive_IQ_Report_${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
+        });
+    }, 500);
+});
 
-        function generateRandomSequence(length) {
-            const digits = [];
-            for (let i = 0; i < length; i++) {
-                digits.push(Math.floor(Math.random() * 10));
-            }
-            return digits.join('-');
-        }
-    </script>
-</body>
-</html>
+// Show practice mode selection
+function showPracticeMode() {
+    // This would open a modal or navigate to practice selection
+    alert('Practice mode coming soon! You\'ll be able to focus on specific categories.');
+}
+
+// Show demo
+function showDemo() {
+    // This would show a demo or tutorial
+    alert('Demo mode coming soon! See how our adaptive testing works.');
+}
+
+// Add some interactive effects
+document.querySelectorAll('.action-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+</script>
+{% endblock %}

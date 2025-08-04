@@ -11,6 +11,13 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
     tests = db.relationship('TestSession', backref='user', lazy=True)
+    # In models/user.py
+    xp = db.Column(db.Integer, default=0)
+    level = db.Column(db.Integer, default=1)
+    streak_days = db.Column(db.Integer, default=0)
+    last_test_date = db.Column(db.Date)
+    achievements = db.Column(db.JSON, default=list)
+    preferences = db.Column(db.JSON, default=dict)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>TestMyIQ.ai - Loading...</h2>
+    
+    <div id="loading-container">
+        <p>Loading questions...</p>
+    </div>
+    
+    <div id="question-container" style="display: none;">
+        <h3>Question will appear here</h3>
+    </div>
+</div>
+
+<script>
+console.log('Script loading...');
+alert('JavaScript is working!');
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    alert('DOM loaded - fetching questions');
+    
+    fetch('/test/get_questions')
+        .then(response => {
+            console.log('Response:', response);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Questions:', data);
+            alert(`Successfully loaded ${data.length} questions!`);
+            
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('question-container').innerHTML = 
+                `<h3>First Question</h3><p>${data[0].question}</p>`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error: ' + error.message);
+        });
+});
+</script>
+{% endblock %}

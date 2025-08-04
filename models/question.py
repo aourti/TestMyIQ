@@ -11,6 +11,9 @@ class Question(db.Model):
     question_type = db.Column(db.String(50))  # e.g., "pattern", "sequence", "digit-span"
     points = db.Column(db.Integer, default=1)
     display_time = db.Column(db.Integer)  # in milliseconds
+    length = db.Column(db.Integer)  # for digit-span questions
+    input_type = db.Column(db.String(20))  # "text", "multiple-choice"
+    time_limit = db.Column(db.Integer)  # time limit in seconds
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     responses = db.relationship('Response', backref='question', lazy=True)
 

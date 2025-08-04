@@ -1,0 +1,292 @@
+/* Global fixes for text visibility and layout */
+
+/* Fix text color issues */
+body {
+    background-color: #f5f7fa !important;
+    color: #333 !important;
+}
+
+/* Fix main container width */
+.container {
+    max-width: 1200px !important;
+}
+
+/* Content containers should have constrained width */
+.content-container,
+.main-content,
+main > .container {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+}
+
+/* Fix white text on white background */
+p, span, div, li, h1, h2, h3, h4, h5, h6 {
+    color: #333 !important;
+}
+
+/* Fix quotes and special sections */
+.daily-quote,
+.adaptive-info,
+.question,
+.interpretation {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    border-left-color: #667eea !important;
+}
+
+.daily-quote p,
+.adaptive-info p,
+.question p,
+.interpretation p {
+    color: #555 !important;
+}
+
+/* Fix navigation */
+.navbar {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.navbar-brand,
+.nav-link {
+    color: #333 !important;
+}
+
+.nav-link:hover {
+    color: #667eea !important;
+}
+
+/* Fix cards and boxes */
+.card,
+.stat-card,
+.category-card,
+.action-card:not(.primary) {
+    background: white !important;
+    color: #333 !important;
+}
+
+.card h3, .card h4,
+.stat-card h3, .stat-card h4,
+.category-card h3, .category-card h4 {
+    color: #333 !important;
+}
+
+/* Keep primary action cards with gradient */
+.action-card.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.action-card.primary h3,
+.action-card.primary p {
+    color: white !important;
+}
+
+/* Fix progress bars */
+.progress {
+    background-color: #e9ecef !important;
+}
+
+/* Fix form elements */
+input, textarea, select {
+    background-color: white !important;
+    color: #333 !important;
+    border-color: #ced4da !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #6c757d !important;
+}
+
+/* Fix buttons */
+.btn:not(.btn-primary):not(.btn-test-primary) {
+    background-color: #f8f9fa !important;
+    color: #333 !important;
+    border-color: #dee2e6 !important;
+}
+
+.btn:not(.btn-primary):not(.btn-test-primary):hover {
+    background-color: #e9ecef !important;
+    color: #333 !important;
+}
+
+/* Ensure primary buttons have white text */
+.btn-primary,
+.btn.btn-primary {
+    color: white !important;
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover {
+    color: white !important;
+}
+
+/* Fix tables */
+.table {
+    color: #333 !important;
+}
+
+.table th {
+    background-color: #f8f9fa !important;
+    color: #333 !important;
+}
+
+/* Fix dropdowns */
+.dropdown-menu {
+    background-color: white !important;
+}
+
+.dropdown-item {
+    color: #333 !important;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #333 !important;
+}
+
+/* Fix modals */
+.modal-content {
+    background-color: white !important;
+    color: #333 !important;
+}
+
+/* Fix alerts and notifications */
+.alert {
+    color: #333 !important;
+}
+
+/* Page specific fixes */
+
+/* Home page */
+.welcome-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.welcome-header h1, 
+.welcome-header h2, 
+.welcome-header h3, 
+.welcome-header h4,
+.welcome-header p,
+.greeting {
+    color: white !important;
+}
+
+.stat-mini {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.stat-mini h4,
+.stat-mini p {
+    color: white !important;
+}
+
+/* Test page specific */
+.test-container {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+}
+
+.question-text {
+    color: #333 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.6 !important;
+}
+
+.option {
+    background: white !important;
+    color: #333 !important;
+    border: 2px solid #ddd !important;
+}
+
+.option:hover {
+    border-color: #667eea !important;
+    background: #f8f9fa !important;
+}
+
+.option.selected {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+}
+
+footer a {
+    color: #6c757d !important;
+}
+
+footer a:hover {
+    color: #333 !important;
+}
+
+/* Override any inline styles */
+[style*="color: white"] {
+    color: #333 !important;
+}
+
+/* Keep white text only where needed */
+.btn-primary,
+.btn-test-primary,
+.badge,
+.progress-bar,
+.welcome-header *,
+.action-card.primary *,
+.option.selected,
+.achievement-unlock,
+.btn-start-category,
+.category-introduction .btn-start-category {
+    color: white !important;
+}
+
+/* Ensure elements with purple/blue gradients have white text */
+[style*="background: linear-gradient(135deg, #667eea"],
+[style*="background: linear-gradient(135deg, #4285f4"],
+[style*="background:linear-gradient(135deg,#667eea"],
+[style*="background:linear-gradient(135deg,#4285f4"] {
+    color: white !important;
+}
+
+/* Ensure buttons with gradients have white text */
+button[style*="background: linear-gradient"],
+.btn[style*="background: linear-gradient"] {
+    color: white !important;
+}
+
+/* Force white text on any element with dark gradients */
+.has-gradient-bg,
+.gradient-bg {
+    color: white !important;
+}
+
+.has-gradient-bg *,
+.gradient-bg * {
+    color: white !important;
+}
+
+/* Fix specific Bootstrap overrides */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-white {
+    color: white !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px !important;
+    }
+    
+    .content-container,
+    .main-content {
+        padding: 0 15px !important;
+    }
+}

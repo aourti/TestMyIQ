@@ -1,108 +1,913 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="test-container">
-    <h2>IQ Test</h2>
-    <div id="progress-bar">
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+<style>
+    /* Test page styles */
+    body {
+        background: #f5f7fa !important;
+        color: #333 !important;
+    }
+    
+    .test-page-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+    
+    .test-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .test-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        min-height: 400px;
+    }
+    
+    .question-container {
+        margin-bottom: 2rem;
+    }
+    
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .question-meta {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .category-badge {
+        background: #667eea;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .difficulty-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .difficulty-easy { background: #4CAF50; }
+    .difficulty-medium { background: #FF9800; }
+    .difficulty-hard { background: #f44336; }
+    
+    .question-text {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+    
+    .options-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .option-item {
+        margin-bottom: 1rem;
+    }
+    
+    .option-label {
+        display: block;
+        padding: 1rem;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #333;
+    }
+    
+    .option-label:hover {
+        background: #e9ecef;
+        border-color: #667eea;
+    }
+    
+    .option-input:checked + .option-label {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .option-input {
+        display: none;
+    }
+    
+    .loading-spinner {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .loading-spinner .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        color: #667eea;
+    }
+    
+    .no-questions {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    
+    .btn-test {
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-test-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-test-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .test-timer {
+        background: #f8f9fa;
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #333;
+        font-weight: bold;
+    }
+    
+    /* Digit Span Styles */
+    .digit-span-container {
+        text-align: center;
+    }
+    
+    .sequence-display {
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .countdown {
+        text-align: center;
+    }
+    
+    .countdown h2 {
+        font-size: 4rem;
+        color: #667eea;
+        margin: 0;
+        animation: pulse 1s ease-in-out;
+    }
+    
+    .sequence-digits {
+        font-size: 3rem;
+        font-weight: bold;
+        letter-spacing: 1rem;
+        color: #333;
+        margin: 2rem 0;
+        font-family: 'Courier New', monospace;
+    }
+    
+    .sequence-input-field {
+        font-size: 1.5rem;
+        text-align: center;
+        letter-spacing: 0.5rem;
+        max-width: 300px;
+        margin: 0 auto;
+        font-family: 'Courier New', monospace;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    /* Feedback overlay styles */
+    .feedback-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .feedback-overlay.show {
+        opacity: 1;
+    }
+    
+    .feedback-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 400px;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+    }
+    
+    .feedback-overlay.show .feedback-content {
+        transform: scale(1);
+    }
+</style>
+
+<div class="test-page-container">
+    <div class="test-header">
+        <h2>TestMyIQ.ai - Adaptive Assessment</h2>
+        <div class="test-timer" id="test-timer">
+            <i class="bi bi-clock"></i> <span id="timer-display">00:00</span>
+        </div>
+        <div class="progress mt-3">
+            <div class="progress-bar" role="progressbar" style="width: 0%;" id="test-progress"></div>
         </div>
     </div>
     
-    <div id="question-container">
-        {% for question in questions %}
-        <div class="question" data-id="{{ question.id }}" style="display: none;">
-            <h3>{{ question.text }}</h3>
-            <div class="options">
-                {% for option in question.options %}
-                <div class="option">
-                    <input type="radio" name="q{{ question.id }}" value="{{ option }}" id="q{{ question.id }}_{{ loop.index }}">
-                    <label for="q{{ question.id }}_{{ loop.index }}">{{ option }}</label>
-                </div>
-                {% endfor %}
+    <div class="test-content">
+        <div id="loading-container" class="loading-spinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading questions...</span>
+            </div>
+            <p class="mt-3">Loading questions...</p>
+        </div>
+        
+        <div id="question-container" style="display: none;">
+            <!-- Questions will be loaded here dynamically -->
+        </div>
+        
+        <div id="no-questions" class="no-questions" style="display: none;">
+            <i class="bi bi-exclamation-circle" style="font-size: 3rem; color: #dc3545;"></i>
+            <h3 class="mt-3">No Questions Available</h3>
+            <p>Unable to load test questions. Please try again later.</p>
+            <a href="{{ url_for('home') }}" class="btn btn-test btn-test-primary mt-3">Return Home</a>
+        </div>
+        
+        <div class="navigation-controls" id="navigation-controls" style="display: none;">
+            <div class="progress-info" style="margin: 0 auto;">
+                Question <span id="current-question">1</span> of <span id="total-questions">0</span>
             </div>
         </div>
-        {% endfor %}
-    </div>
-    
-    <div class="navigation-buttons">
-        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
-        <button id="next-btn" class="btn btn-primary">Next</button>
-        <button id="finish-btn" class="btn btn-success" style="display: none;">Finish Test</button>
     </div>
 </div>
 
 <input type="hidden" id="session-id" value="{{ session_id }}">
 
-{% endblock %}
-
-{% block scripts %}
 <script>
-let startTime;
-let currentQuestion = 0;
-const questions = document.querySelectorAll('.question');
-const sessionId = document.getElementById('session-id').value;
+console.log('🚀 TESTMYIQ.AI SCRIPT STARTING');
 
-function showQuestion(index) {
-    questions.forEach(q => q.style.display = 'none');
-    questions[index].style.display = 'block';
+// Global variables
+let questions = [];
+let currentQuestionIndex = -1; // Start at -1 since we increment before displaying
+let answers = {};
+let startTime = Date.now();
+let timerInterval;
+let questionHistory = [];
+
+// Adaptive testing variables
+let currentCategoryIndex = 0;
+let categoryProgress = {};
+let isShowingCategoryIntro = false;
+const categories = ['Verbal Comprehension', 'Perceptual Reasoning', 'Working Memory', 'Processing Speed', 'Fluid Reasoning'];
+const questionsPerCategory = 3;
+
+// Category descriptions for introductions
+const categoryDescriptions = {
+    'Verbal Comprehension': 'These questions test your understanding of language, vocabulary, and verbal reasoning.',
+    'Perceptual Reasoning': 'These questions assess your ability to analyze visual information and solve non-verbal problems.',
+    'Working Memory': 'These questions test your ability to hold and manipulate information in your mind.',
+    'Processing Speed': 'These questions measure how quickly you can process simple information.',
+    'Fluid Reasoning': 'These questions test your ability to think logically and solve new problems.'
+};
+
+// Initialize category progress
+categories.forEach(category => {
+    categoryProgress[category] = {
+        questionsAnswered: 0,
+        difficulty: 'easy',
+        correctAnswers: 0,
+        introduced: false
+    };
+});
+
+// Initialize test
+document.addEventListener('DOMContentLoaded', function() {
+    loadQuestions();
+    startTimer();
+});
+
+// Load initial questions
+async function loadQuestions() {
+    // Initialize empty questions array for the adaptive system
+    questions = [];
     
-    document.getElementById('prev-btn').disabled = index === 0;
-    document.getElementById('next-btn').style.display = index === questions.length - 1 ? 'none' : 'block';
-    document.getElementById('finish-btn').style.display = index === questions.length - 1 ? 'block' : 'none';
+    // Hide loading, show question container
+    document.getElementById('loading-container').style.display = 'none';
+    document.getElementById('question-container').style.display = 'block';
+    document.getElementById('navigation-controls').style.display = 'flex';
+    document.getElementById('total-questions').textContent = categories.length * questionsPerCategory;
     
-    updateProgressBar(index);
-    startTime = new Date();
+    // Start with first category introduction
+    showCategoryIntroduction(categories[currentCategoryIndex]);
 }
 
-function updateProgressBar(index) {
-    const progress = ((index + 1) / questions.length) * 100;
-    document.querySelector('.progress-bar').style.width = `${progress}%`;
+// Show category introduction
+function showCategoryIntroduction(categoryName) {
+    const questionContainer = document.getElementById('question-container');
+    const description = categoryDescriptions[categoryName];
+    const categoryIndex = currentCategoryIndex + 1;
+    const totalCategories = categories.length;
+    
+    isShowingCategoryIntro = true;
+    
+    questionContainer.innerHTML = `
+        <div class="category-introduction" style="text-align: center; padding: 2rem;">
+            <div class="category-header" style="margin-bottom: 2rem;">
+                <h1 style="color: #667eea; margin-bottom: 0.5rem;">Category ${categoryIndex} of ${totalCategories}</h1>
+                <h2 style="color: #333; margin-bottom: 1rem;">${categoryName}</h2>
+                <div class="progress-bar" style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; margin: 1rem 0;">
+                    <div class="progress-fill" style="width: ${(categoryIndex-1)/totalCategories*100}%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 4px; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+            
+            <div class="category-description" style="max-width: 600px; margin: 0 auto 2rem auto;">
+                <p style="font-size: 1.2rem; color: #666; line-height: 1.6;">${description}</p>
+            </div>
+            
+            <div class="category-stats" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h3 style="color: #333; margin-bottom: 1rem;">What to Expect</h3>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                    <div style="text-align: center; margin: 0.5rem;">
+                        <div style="font-size: 2rem; color: #667eea; font-weight: bold;">${questionsPerCategory}</div>
+                        <div style="color: #666; font-size: 0.9rem;">Questions</div>
+                    </div>
+                    <div style="text-align: center; margin: 0.5rem;">
+                        <div style="font-size: 2rem; color: #667eea; font-weight: bold;">⚡</div>
+                        <div style="color: #666; font-size: 0.9rem;">Adaptive Difficulty</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="startCategoryQuestions()" class="btn-start-category" 
+                    style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; 
+                           padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px; cursor: pointer; 
+                           transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                Begin ${categoryName} Questions
+            </button>
+        </div>
+    `;
+    
+    // Add hover effect to button
+    const button = questionContainer.querySelector('.btn-start-category');
+    button.addEventListener('mouseenter', () => {
+        button.style.transform = 'translateY(-2px)';
+        button.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+    });
+    button.addEventListener('mouseleave', () => {
+        button.style.transform = 'translateY(0)';
+        button.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
+    });
+    
+    console.log(`📚 Showing introduction for category: ${categoryName}`);
 }
 
-function submitAnswer() {
-    const currentQ = questions[currentQuestion];
-    const questionId = currentQ.dataset.id;
-    const selectedOption = currentQ.querySelector('input:checked');
+// Start category questions after introduction
+async function startCategoryQuestions() {
+    isShowingCategoryIntro = false;
+    const currentCategory = categories[currentCategoryIndex];
     
-    if (selectedOption) {
-        const responseTime = (new Date() - startTime) / 1000;
-        fetch('/test/submit_answer', {
+    // Mark category as introduced
+    categoryProgress[currentCategory].introduced = true;
+    
+    // Get first question for this category
+    const adaptiveData = await getNextAdaptiveQuestion(currentCategory, 'easy', null);
+    
+    if (adaptiveData && adaptiveData.question) {
+        // Validate that we got a question from the correct category
+        if (adaptiveData.question.category !== currentCategory) {
+            console.error(`Backend returned wrong category! Expected: ${currentCategory}, Got: ${adaptiveData.question.category}`);
+            // Force the question to be in the correct category for tracking
+            adaptiveData.question.category = currentCategory;
+        }
+        
+        questions.push(adaptiveData.question);
+        
+        // Move to this question
+        currentQuestionIndex++;
+        displayQuestion(currentQuestionIndex);
+    } else {
+        console.log('No questions available for category, skipping');
+        // Move to next category
+        currentCategoryIndex++;
+        if (currentCategoryIndex < categories.length) {
+            showCategoryIntroduction(categories[currentCategoryIndex]);
+        } else {
+            finishTest();
+        }
+    }
+}
+
+// Display current question
+function displayQuestion(index) {
+    const question = questions[index];
+    const container = document.getElementById('question-container');
+    
+    // Handle different question types
+    if (question.type === 'digit-span' || question.type === 'digit-span-reverse') {
+        displayDigitSpanQuestion(question, index);
+    } else {
+        displayMultipleChoiceQuestion(question, index);
+    }
+    
+    updateProgress();
+}
+
+// Display multiple choice questions
+function displayMultipleChoiceQuestion(question, index) {
+    const container = document.getElementById('question-container');
+    
+    let html = `
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Question ${index + 1}</h3>
+                <div class="question-meta">
+                    <span class="category-badge">${question.category}</span>
+                    <span class="difficulty-badge difficulty-${question.difficulty}">${question.difficulty.toUpperCase()}</span>
+                </div>
+            </div>
+            <p class="question-text">${question.question}</p>
+    `;
+    
+    if (question.options && Array.isArray(question.options) && question.options.length > 0) {
+        html += '<ul class="options-list">';
+        question.options.forEach((option, i) => {
+            html += `
+                <li class="option-item">
+                    <input type="radio" 
+                           class="option-input" 
+                           name="question_${question.id}" 
+                           id="option_${question.id}_${i}" 
+                           value="${i}"
+                           onchange="saveAnswer('${question.id}', ${i})">
+                    <label class="option-label" for="option_${question.id}_${i}">
+                        ${option}
+                    </label>
+                </li>
+            `;
+        });
+        html += '</ul>';
+    } else {
+        html += '<div class="alert alert-warning">No options available for this question.</div>';
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Display digit span questions (memory tests)
+function displayDigitSpanQuestion(question, index) {
+    const container = document.getElementById('question-container');
+    
+    // Generate random sequence based on length
+    const length = question.length || 4;
+    window.currentSequence = generateRandomSequence(length);
+    const displayTime = question.displayTime || 3000;
+    
+    let html = `
+        <div class="question-container digit-span-container">
+            <div class="question-header">
+                <h3>Question ${index + 1}</h3>
+                <div class="question-meta">
+                    <span class="category-badge">${question.category}</span>
+                    <span class="difficulty-badge difficulty-${question.difficulty}">${question.difficulty.toUpperCase()}</span>
+                </div>
+            </div>
+            <p class="question-text">${question.question}</p>
+            <div class="digit-span-phase">
+                <div id="sequence-display" class="sequence-display">
+                    <div class="sequence-ready">
+                        <p>Get ready to memorize a sequence of ${length} digits.</p>
+                        <button onclick="startSequence()" class="btn btn-test btn-test-primary">Start</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// Save answer and handle progression
+function saveAnswer(questionId, optionIndex) {
+    const question = questions.find(q => q.id === questionId);
+    const isCorrect = optionIndex == question.correct;
+    
+    answers[questionId] = optionIndex;
+    questionHistory.push(questionId);
+    
+    // Show feedback
+    showAnswerFeedback(isCorrect);
+    
+    // Submit to server
+    const submissionAnswer = question.options && question.options[optionIndex] ? 
+                            question.options[optionIndex] : `Option ${optionIndex + 1}`;
+    submitAnswer(questionId, submissionAnswer, isCorrect);
+    
+    // Handle progression after a short delay
+    setTimeout(() => {
+        handleAdaptiveProgression(question, isCorrect);
+    }, 1200);
+}
+
+// Generate random digit sequence
+function generateRandomSequence(length) {
+    let sequence = [];
+    for (let i = 0; i < length; i++) {
+        sequence.push(Math.floor(Math.random() * 10));
+    }
+    return sequence;
+}
+
+// Start showing the sequence
+function startSequence() {
+    const question = questions[currentQuestionIndex];
+    const sequenceDisplay = document.getElementById('sequence-display');
+    const displayTime = question.displayTime || 3000;
+    
+    // Show countdown
+    let countdown = 3;
+    sequenceDisplay.innerHTML = `
+        <div class="countdown" style="text-align: center;">
+            <h2 style="font-size: 4rem; color: #667eea; margin: 0;">${countdown}</h2>
+            <p>Get ready...</p>
+        </div>
+    `;
+    
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            sequenceDisplay.innerHTML = `
+                <div class="countdown" style="text-align: center;">
+                    <h2 style="font-size: 4rem; color: #667eea; margin: 0;">${countdown}</h2>
+                    <p>Get ready...</p>
+                </div>
+            `;
+        } else {
+            clearInterval(countdownInterval);
+            showSequence();
+        }
+    }, 1000);
+}
+
+// Show the digit sequence
+function showSequence() {
+    const question = questions[currentQuestionIndex];
+    const sequenceDisplay = document.getElementById('sequence-display');
+    const displayTime = question.displayTime || 3000;
+    
+    sequenceDisplay.innerHTML = `
+        <div class="sequence-showing" style="text-align: center;">
+            <h1 style="font-size: 3rem; font-weight: bold; letter-spacing: 1rem; color: #333; margin: 2rem 0; font-family: 'Courier New', monospace;">
+                ${window.currentSequence.join(' ')}
+            </h1>
+            <p>Memorize this sequence</p>
+        </div>
+    `;
+    
+    // After display time, show input
+    setTimeout(() => {
+        showSequenceInput();
+    }, displayTime);
+}
+
+// Show input field for sequence
+function showSequenceInput() {
+    const question = questions[currentQuestionIndex];
+    const sequenceDisplay = document.getElementById('sequence-display');
+    const isReverse = question.type === 'digit-span-reverse';
+    
+    sequenceDisplay.innerHTML = `
+        <div class="sequence-input" style="text-align: center;">
+            <p>${isReverse ? 'Enter the sequence in REVERSE order:' : 'Enter the sequence you saw:'}</p>
+            <input type="text" 
+                   id="sequence-answer" 
+                   class="form-control" 
+                   style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem; max-width: 300px; margin: 0 auto; font-family: 'Courier New', monospace;"
+                   placeholder="Enter digits (e.g., 1234)"
+                   maxlength="${question.length || 4}"
+                   onkeypress="handleSequenceKeypress(event)">
+            <button onclick="submitSequenceAnswer()" class="btn btn-test btn-test-primary mt-3">Submit</button>
+        </div>
+    `;
+    
+    // Focus on input
+    setTimeout(() => {
+        document.getElementById('sequence-answer').focus();
+    }, 100);
+}
+
+// Handle keypress in sequence input
+function handleSequenceKeypress(event) {
+    if (event.key === 'Enter') {
+        submitSequenceAnswer();
+    }
+    // Allow only digits
+    if (!/[0-9]/.test(event.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+    }
+}
+
+// Submit sequence answer
+function submitSequenceAnswer() {
+    const input = document.getElementById('sequence-answer');
+    const userAnswer = input.value.trim();
+    const question = questions[currentQuestionIndex];
+    
+    if (userAnswer.length === 0) {
+        alert('Please enter your answer');
+        return;
+    }
+    
+    // Check answer
+    let correctAnswer;
+    if (question.type === 'digit-span-reverse') {
+        correctAnswer = window.currentSequence.slice().reverse().join('');
+    } else {
+        correctAnswer = window.currentSequence.join('');
+    }
+    
+    const isCorrect = userAnswer === correctAnswer;
+    
+    console.log(`💾 Sequence answer: ${userAnswer} vs ${correctAnswer} (${isCorrect ? 'correct' : 'incorrect'})`);
+    
+    // Save answer and handle adaptive progression
+    answers[question.id] = userAnswer;
+    questionHistory.push(question.id);
+    
+    // Show feedback
+    showAnswerFeedback(isCorrect);
+    
+    // Submit to server
+    submitAnswer(question.id, userAnswer, isCorrect);
+    
+    // Handle adaptive progression
+    setTimeout(() => {
+        handleAdaptiveProgression(question, isCorrect);
+    }, 1200);
+}
+
+// Show visual feedback
+function showAnswerFeedback(isCorrect) {
+    const overlay = document.createElement('div');
+    overlay.className = 'feedback-overlay';
+    overlay.innerHTML = `
+        <div class="feedback-content">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">
+                ${isCorrect ? '✅' : '❌'}
+            </div>
+            <h3 style="color: ${isCorrect ? '#4CAF50' : '#f44336'}; margin: 0; font-size: 2rem;">
+                ${isCorrect ? 'Correct!' : 'Incorrect'}
+            </h3>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => overlay.classList.add('show'), 50);
+    
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 300);
+    }, 1000);
+}
+
+// Handle adaptive progression (category-based)
+async function handleAdaptiveProgression(currentQuestion, isCorrect) {
+    const category = currentQuestion.category;
+    
+    // Update category progress
+    if (!categoryProgress[category]) {
+        categoryProgress[category] = {
+            questionsAnswered: 0,
+            difficulty: 'easy',
+            correctAnswers: 0,
+            introduced: false
+        };
+    }
+    
+    categoryProgress[category].questionsAnswered++;
+    if (isCorrect) {
+        categoryProgress[category].correctAnswers++;
+    }
+    
+    // Calculate within-category performance for adaptive difficulty
+    const performance = categoryProgress[category].correctAnswers / categoryProgress[category].questionsAnswered;
+    let nextDifficulty = currentQuestion.difficulty;
+    
+    // Adjust difficulty within category based on performance
+    if (isCorrect && performance >= 0.7 && nextDifficulty === 'easy') {
+        nextDifficulty = 'medium';
+    } else if (isCorrect && performance >= 0.8 && nextDifficulty === 'medium') {
+        nextDifficulty = 'hard';
+    } else if (!isCorrect && performance < 0.4 && nextDifficulty === 'hard') {
+        nextDifficulty = 'medium';
+    } else if (!isCorrect && performance < 0.3 && nextDifficulty === 'medium') {
+        nextDifficulty = 'easy';
+    }
+    
+    console.log(`Category: ${category} - Q${categoryProgress[category].questionsAnswered}/${questionsPerCategory} - Performance: ${(performance*100).toFixed(1)}%`);
+    
+    // Check if current category is complete
+    if (categoryProgress[category].questionsAnswered >= questionsPerCategory) {
+        console.log(`Category "${category}" completed with ${categoryProgress[category].correctAnswers}/${questionsPerCategory} correct`);
+        
+        // Move to next category
+        currentCategoryIndex++;
+        
+        if (currentCategoryIndex >= categories.length) {
+            // All categories completed
+            finishTest();
+            return;
+        } else {
+            // Show next category introduction
+            showCategoryIntroduction(categories[currentCategoryIndex]);
+            return;
+        }
+    }
+    
+    // Continue with same category - get next question with adapted difficulty
+    const adaptiveData = await getNextAdaptiveQuestion(category, nextDifficulty, isCorrect);
+    
+    if (adaptiveData && adaptiveData.question) {
+        // Validate that we got a question from the correct category
+        if (adaptiveData.question.category !== category) {
+            console.error(`Backend returned wrong category! Expected: ${category}, Got: ${adaptiveData.question.category}`);
+            // Force the question to be in the correct category for tracking
+            adaptiveData.question.category = category;
+        }
+        
+        questions.push(adaptiveData.question);
+        
+        // Move to next question
+        currentQuestionIndex++;
+        displayQuestion(currentQuestionIndex);
+    } else {
+        console.log('No more questions available for category, moving to next category');
+        // Skip to next category if no questions available
+        currentCategoryIndex++;
+        if (currentCategoryIndex < categories.length) {
+            showCategoryIntroduction(categories[currentCategoryIndex]);
+        } else {
+            finishTest();
+        }
+    }
+}
+
+// Finish test helper function
+function finishTest() {
+    const sessionId = document.getElementById('session-id').value;
+    window.location.href = `/test/finish/${sessionId}`;
+}
+
+// Get next adaptive question
+async function getNextAdaptiveQuestion(category, currentDifficulty, isCorrect) {
+    try {
+        const response = await fetch('/test/get_adaptive_question', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                question_id: questionId,
-                answer: selectedOption.value,
-                session_id: sessionId,
-                response_time: responseTime
+                category: category,
+                difficulty: currentDifficulty,
+                is_correct: isCorrect,
+                question_history: questionHistory
             })
         });
+        
+        return await response.json();
+    } catch (error) {
+        console.error('❌ Error getting adaptive question:', error);
+        return null;
     }
 }
 
-document.getElementById('prev-btn').addEventListener('click', () => {
-    if (currentQuestion > 0) {
-        currentQuestion--;
-        showQuestion(currentQuestion);
+// Submit answer to server
+async function submitAnswer(questionId, answer, isCorrect = null) {
+    const sessionId = document.getElementById('session-id').value;
+    
+    try {
+        await fetch('/test/submit_answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                question_id: questionId,
+                answer: answer,
+                session_id: sessionId,
+                response_time: (Date.now() - startTime) / 1000,
+                is_correct: isCorrect
+            })
+        });
+    } catch (error) {
+        console.error('❌ Error submitting answer:', error);
+    }
+}
+
+// Update progress display
+function updateProgress() {
+    if (isShowingCategoryIntro) {
+        // Don't update progress during category introductions
+        return;
+    }
+    
+    const totalAnswered = Object.keys(answers).length;
+    const totalQuestions = categories.length * questionsPerCategory;
+    const progress = (totalAnswered / totalQuestions) * 100;
+    
+    // Update main progress bar
+    document.getElementById('test-progress').style.width = `${progress}%`;
+    document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+    
+    // Update category-specific progress if we have a current question
+    if (questions[currentQuestionIndex]) {
+        const currentCategory = questions[currentQuestionIndex].category;
+        const categoryIndex = categories.indexOf(currentCategory);
+        const categoryQuestionsAnswered = categoryProgress[currentCategory]?.questionsAnswered || 0;
+        
+        // Update the category indicator in the UI
+        const categoryInfo = document.createElement('div');
+        categoryInfo.style.cssText = `
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        `;
+        categoryInfo.innerHTML = `${currentCategory} - Question ${categoryQuestionsAnswered + 1} of ${questionsPerCategory}`;
+        
+        const progressContainer = document.querySelector('.progress-container');
+        if (progressContainer) {
+            // Remove existing category info
+            const existingInfo = progressContainer.querySelector('.category-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+            categoryInfo.className = 'category-info';
+            progressContainer.style.position = 'relative';
+            progressContainer.appendChild(categoryInfo);
+        }
+    }
+}
+
+// Start timer
+function startTimer() {
+    timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        document.getElementById('timer-display').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+// Show no questions error
+function showNoQuestions() {
+    document.getElementById('loading-container').style.display = 'none';
+    document.getElementById('no-questions').style.display = 'block';
+}
+
+// Cleanup
+window.addEventListener('beforeunload', () => {
+    if (timerInterval) {
+        clearInterval(timerInterval);
     }
 });
 
-document.getElementById('next-btn').addEventListener('click', () => {
-    if (currentQuestion < questions.length - 1) {
-        submitAnswer();
-        currentQuestion++;
-        showQuestion(currentQuestion);
-    }
-});
-
-document.getElementById('finish-btn').addEventListener('click', () => {
-    submitAnswer();
-    window.location.href = `/test/finish/${sessionId}`;
-});
-
-// Show first question on load
-showQuestion(0);
+console.log('🏁 TESTMYIQ.AI SCRIPT LOADED');
 </script>
 {% endblock %}
