@@ -1,0 +1,493 @@
+<!-- Mobile Responsive CSS - Add to static/css/mobile-responsive.css -->
+<style>
+/* Mobile-First Responsive Design */
+
+/* Base mobile styles */
+@media screen and (max-width: 768px) {
+    /* Global adjustments */
+    body {
+        font-size: 16px; /* Prevent zoom on iOS */
+        -webkit-text-size-adjust: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Container adjustments */
+    .container,
+    .index-container,
+    .test-page-container {
+        max-width: 100%;
+        padding: 15px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Navigation improvements */
+    .navbar {
+        padding: 0.5rem 0 !important;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem !important;
+    }
+    
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .navbar-collapse {
+        background: white;
+        margin: 0 -15px;
+        padding: 15px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .nav-link {
+        padding: 0.75rem 1rem !important;
+        border-bottom: 1px solid #f8f9fa;
+    }
+    
+    /* Test interface mobile optimization */
+    .question-container {
+        padding: 15px !important;
+    }
+    
+    .question {
+        padding: 20px 15px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .question-text {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    .options {
+        gap: 10px !important;
+    }
+    
+    .option {
+        padding: 15px !important;
+        font-size: 0.95rem !important;
+        touch-action: manipulation; /* Prevent double-tap zoom */
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Button improvements for touch */
+    .btn,
+    button {
+        min-height: 44px !important; /* Apple's touch target recommendation */
+        padding: 12px 24px !important;
+        font-size: 1rem !important;
+        touch-action: manipulation;
+    }
+    
+    .btn-test,
+    .btn-test-primary {
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+    
+    /* Timer and progress mobile positioning */
+    .test-timer {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 100;
+        background: rgba(102, 126, 234, 0.95) !important;
+        color: white !important;
+        padding: 8px 16px !important;
+        border-radius: 20px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .countdown-timer {
+        font-size: 1.5em !important;
+        padding: 10px 20px !important;
+    }
+    
+    /* Progress bar mobile */
+    .progress-container {
+        height: 8px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    /* Welcome header mobile */
+    .welcome-header {
+        padding: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .greeting {
+        font-size: 1.5em !important;
+    }
+    
+    .user-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    
+    .stat-mini {
+        padding: 0.75rem !important;
+    }
+    
+    .stat-mini h4 {
+        font-size: 1.2em !important;
+    }
+    
+    .stat-mini p {
+        font-size: 0.75em !important;
+    }
+    
+    /* Quick actions mobile */
+    .quick-actions {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+    
+    .action-card {
+        padding: 1.25rem !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 1rem !important;
+    }
+    
+    .action-card .icon {
+        font-size: 2em !important;
+    }
+    
+    .action-card h3 {
+        font-size: 1.1em !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .action-card p {
+        font-size: 0.85em !important;
+        display: none !important; /* Hide description on mobile */
+    }
+    
+    /* Results page mobile */
+    .score-circle {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    
+    .score-text {
+        font-size: 36px !important;
+    }
+    
+    .category-scores {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .category-card {
+        padding: 15px !important;
+    }
+    
+    /* Profile page mobile */
+    .stat-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+    
+    .stat-card {
+        padding: 1rem !important;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Tables mobile optimization */
+    .table-responsive {
+        margin: 0 -15px;
+        padding: 0 15px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        font-size: 0.85rem !important;
+    }
+    
+    /* Modal mobile optimization */
+    .modal-dialog {
+        margin: 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+    }
+    
+    .modal-content {
+        border-radius: 12px !important;
+    }
+    
+    /* Memory test mobile adjustments */
+    .memory-display {
+        font-size: 1.5em !important;
+        letter-spacing: 5px !important;
+        padding: 20px 10px !important;
+    }
+    
+    .sequence-digits {
+        font-size: 2rem !important;
+        letter-spacing: 0.5rem !important;
+    }
+    
+    .sequence-input-field {
+        font-size: 1.2rem !important;
+        max-width: 250px !important;
+    }
+    
+    /* Pattern grid mobile */
+    .pattern-grid {
+        grid-template-columns: repeat(3, 80px) !important;
+        gap: 5px !important;
+    }
+    
+    .pattern-cell {
+        width: 80px !important;
+        height: 80px !important;
+        font-size: 20px !important;
+    }
+    
+    /* Auth forms mobile */
+    .auth-container {
+        margin: 1rem !important;
+        padding: 1.5rem !important;
+        border-radius: 15px !important;
+    }
+    
+    .auth-container h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Footer mobile */
+    footer {
+        padding: 2rem 1rem !important;
+        text-align: center !important;
+    }
+    
+    .social-links {
+        margin-top: 1rem !important;
+    }
+    
+    /* Scroll to top button mobile */
+    .scroll-top {
+        width: 40px !important;
+        height: 40px !important;
+        bottom: 70px !important; /* Above timer */
+        right: 15px !important;
+    }
+    
+    /* Toast notifications mobile */
+    .toast-container {
+        top: auto !important;
+        bottom: 120px !important;
+        right: 15px !important;
+        left: 15px !important;
+    }
+    
+    .custom-toast {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+    
+    /* Achievement unlock mobile */
+    .achievement-unlock {
+        width: calc(100% - 30px) !important;
+        right: 15px !important;
+        left: 15px !important;
+        transform: translateX(0) !important;
+    }
+    
+    .achievement-unlock.show {
+        transform: translateX(0) !important;
+    }
+    
+    /* Loading states mobile */
+    .loading-spinner {
+        padding: 2rem !important;
+    }
+    
+    /* Feedback overlay mobile */
+    .feedback-overlay {
+        padding: 20px !important;
+    }
+    
+    .feedback-content {
+        padding: 1.5rem !important;
+        max-width: 90% !important;
+    }
+    
+    /* Category introduction mobile */
+    .category-introduction {
+        padding: 1.5rem !important;
+    }
+    
+    .category-introduction h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .category-introduction h2 {
+        font-size: 1.3rem !important;
+    }
+    
+    .btn-start-category {
+        width: 100% !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* Small mobile devices (< 480px) */
+@media screen and (max-width: 480px) {
+    /* Even more compact styles */
+    .container,
+    .index-container {
+        padding: 10px !important;
+    }
+    
+    .question {
+        padding: 15px !important;
+    }
+    
+    .option {
+        padding: 12px 10px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .user-stats {
+        font-size: 0.85rem !important;
+    }
+    
+    .pattern-grid {
+        grid-template-columns: repeat(3, 70px) !important;
+    }
+    
+    .pattern-cell {
+        width: 70px !important;
+        height: 70px !important;
+        font-size: 18px !important;
+    }
+    
+    /* Hide less important elements on very small screens */
+    .achievements {
+        display: none !important;
+    }
+    
+    .daily-quote {
+        padding: 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    /* Reduce vertical spacing in landscape */
+    .welcome-header {
+        padding: 1rem !important;
+    }
+    
+    .question {
+        padding: 15px !important;
+    }
+    
+    .btn {
+        padding: 10px 20px !important;
+        min-height: 40px !important;
+    }
+    
+    /* Hide footer in landscape to save space */
+    footer {
+        display: none !important;
+    }
+}
+
+/* Touch-specific enhancements */
+@media (hover: none) and (pointer: coarse) {
+    /* Remove hover effects on touch devices */
+    .option:hover {
+        transform: none !important;
+        border-color: #ddd !important;
+    }
+    
+    .btn:hover {
+        transform: none !important;
+    }
+    
+    /* Increase touch targets */
+    .option {
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Add active states for better feedback */
+    .option:active {
+        background-color: #f0f0f0 !important;
+    }
+    
+    .btn:active {
+        opacity: 0.8 !important;
+    }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* Fix for iOS form zoom */
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Fix for iOS bounce scrolling */
+    .modal-body,
+    .question-container {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .option {
+        border-width: 3px !important;
+    }
+    
+    .btn {
+        border: 2px solid currentColor !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print styles for results */
+@media print {
+    .navbar,
+    footer,
+    .btn,
+    .scroll-top,
+    .toast-container {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+    
+    .results-container {
+        background: white !important;
+        color: black !important;
+    }
+}
+</style>

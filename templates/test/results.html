@@ -13,14 +13,8 @@
                 <div class="score-summary card">
                     <div class="card-body text-center">
                         <h3 class="card-title">Your Score</h3>
-                        <h2 class="display-3 text-primary">{{ session.score or 0 }} / {{ session.total_questions }}</h2>
-                        <div class="progress mb-3" style="height: 20px;">
-                            <div class="progress-bar bg-primary" role="progressbar" 
-                                 style="width: {{ ((session.score or 0) / session.total_questions * 100) | round(1) }}%">
-                                {{ ((session.score or 0) / session.total_questions * 100) | round(1) }}%
-                            </div>
-                        </div>
-                        <p class="text-muted">Accuracy Rate</p>
+                        <h2 class="display-3 text-primary">{{ session.score or 0 }}</h2>
+                        <p class="text-muted">IQ Score</p>
                     </div>
                 </div>
             </div>
@@ -58,7 +52,7 @@
                     <div class="card-body text-center">
                         <i class="fas fa-target text-warning mb-2" style="font-size: 2rem;"></i>
                         <h5>Correct Answers</h5>
-                        <h4 class="text-warning">{{ session.score or 0 }}</h4>
+                        <h4 class="text-warning">{{ session.responses | selectattr('is_correct') | list | length }}</h4>
                     </div>
                 </div>
             </div>

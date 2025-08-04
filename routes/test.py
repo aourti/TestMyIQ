@@ -189,3 +189,20 @@ def finish(session_id):
     db.session.commit()
     
     return render_template('test/results.html', session=session)
+
+@test_bp.route('/save_results', methods=['POST'])
+@login_required
+def save_results():
+    data = request.get_json()
+    
+    # Save additional scientific metrics
+    session = TestSession.query.get(data.get('session_id'))
+    if session:
+        session.fsiq = data.get('fsiq')
+        session.percentile = data.get('percentile')
+        session.classification = data.get('classification')
+        session.domain_scores = json.dumps(data.get('domain_scores'))
+        session.confidence_interval = json.dumps(data.get('confidence_interval'))
+        db.session.commit()
+    
+    return jsonify({'status': 'success'})
