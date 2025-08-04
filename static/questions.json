@@ -89,28 +89,28 @@
   },
   "Working Memory": {
     "easy": [
-      { "id": "wm_e1", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 3000, "inputType": "text", "points": 1 },
-      { "id": "wm_e2", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 3000, "inputType": "text", "points": 1 },
+      { "id": "wm_e1", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
+      { "id": "wm_e2", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
       { "id": "wm_e3", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
       { "id": "wm_e4", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 },
       { "id": "wm_e5", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 4000, "inputType": "text", "points": 1 },
-      { "id": "wm_e6", "type": "digit-span", "question": "Remember this sequence:", "length": 3, "displayTime": 2500, "inputType": "text", "points": 1 }
+      { "id": "wm_e6", "type": "digit-span", "question": "Remember this sequence:", "length": 4, "displayTime": 3500, "inputType": "text", "points": 1 }
     ],
     "medium": [
       { "id": "wm_m1", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 4000, "inputType": "text", "points": 2 },
       { "id": "wm_m2", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 4000, "inputType": "text", "points": 2 },
-      { "id": "wm_m3", "type": "digit-span", "question": "Remember this sequence:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 2 },
-      { "id": "wm_m4", "type": "digit-span", "question": "Remember this sequence:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 2 },
-      { "id": "wm_m5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 4, "displayTime": 4500, "inputType": "text", "points": 2 },
-      { "id": "wm_m6", "type": "digit-span", "question": "Remember this sequence:", "length": 7, "displayTime": 6000, "inputType": "text", "points": 2 }
+      { "id": "wm_m3", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 2 },
+      { "id": "wm_m4", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 2 },
+      { "id": "wm_m5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 5, "displayTime": 4500, "inputType": "text", "points": 2 },
+      { "id": "wm_m6", "type": "digit-span", "question": "Remember this sequence:", "length": 5, "displayTime": 6000, "inputType": "text", "points": 2 }
     ],
     "hard": [
-      { "id": "wm_h1", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 3 },
-      { "id": "wm_h2", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 5, "displayTime": 5000, "inputType": "text", "points": 3 },
+      { "id": "wm_h1", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 3 },
+      { "id": "wm_h2", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 5000, "inputType": "text", "points": 3 },
       { "id": "wm_h3", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 6000, "inputType": "text", "points": 3 },
-      { "id": "wm_h4", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 7, "displayTime": 7000, "inputType": "text", "points": 3 },
-      { "id": "wm_h5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 7, "displayTime": 6500, "inputType": "text", "points": 3 },
-      { "id": "wm_h6", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 8, "displayTime": 8000, "inputType": "text", "points": 3 }
+      { "id": "wm_h4", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 7000, "inputType": "text", "points": 3 },
+      { "id": "wm_h5", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 6500, "inputType": "text", "points": 3 },
+      { "id": "wm_h6", "type": "digit-span-reverse", "question": "Remember and enter in REVERSE order:", "length": 6, "displayTime": 8000, "inputType": "text", "points": 3 }
     ]
   },
   "Processing Speed": {
