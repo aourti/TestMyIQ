@@ -179,6 +179,12 @@ function showNextQuestion() {
 }
 
 function displayQuestion(question) {
+    // Cleanup previous timer if any
+    const oldTimer = document.querySelector('.countdown-timer');
+    if (oldTimer) {
+        oldTimer.remove();
+    }
+
     if (question.type && question.type.includes('digit-span') && question.length) {
         const sequence = generateRandomSequence(question.length);
         question.sequence = sequence; 
@@ -232,7 +238,7 @@ function displayQuestion(question) {
         html += `<p class="question-text">${question.question}</p>`;
     }
     
-    if (!question.inputType || question.inputType !== 'text') {
+    if ((!question.inputType || question.inputType !== 'text') && question.options && question.options.length > 0) {
         html += '<div class="options">';
         question.options.forEach((option, index) => {
             html += `<div class="option" onclick="selectAnswer(${index})">${option}</div>`;
@@ -254,18 +260,44 @@ function displayQuestion(question) {
     
     if (question.timeLimit) {
         let timeLeft = question.timeLimit;
+        window.questionTimeLeft = timeLeft; // Store for scoring
+
         const countdownDiv = document.createElement('div');
-        countdownDiv.className = 'countdown-timer';
-        document.body.appendChild(countdownDiv);
-        countdownDiv.style.display = 'block';
-        countdownDiv.textContent = timeLeft;
+        countdownDiv.className = 'fancy-timer';
+        countdownDiv.innerHTML = `
+            <svg class="timer-svg" width="60" height="60" viewBox="0 0 60 60">
+                <circle class="timer-bg" cx="30" cy="30" r="28"></circle>
+                <circle class="timer-fg" cx="30" cy="30" r="28"></circle>
+            </svg>
+            <span class="timer-text">${timeLeft}</span>
+        `;
         
+        const questionContainer = document.querySelector('.question');
+        if(questionContainer) {
+            questionContainer.style.position = 'relative'; // Needed for absolute positioning of timer
+            questionContainer.prepend(countdownDiv);
+        }
+        
+        const timerFg = countdownDiv.querySelector('.timer-fg');
+        const timerText = countdownDiv.querySelector('.timer-text');
+        const circumference = 2 * Math.PI * 28;
+        timerFg.style.strokeDasharray = circumference;
+        timerFg.style.strokeDashoffset = 0; // Start with full circle
+
         questionTimer = setInterval(() => {
             timeLeft--;
-            countdownDiv.textContent = timeLeft;
+            window.questionTimeLeft = timeLeft;
+
+            const offset = circumference - (timeLeft / question.timeLimit) * circumference;
+            timerFg.style.strokeDashoffset = offset;
+            timerText.textContent = timeLeft;
+
+            if (timeLeft <= 5) {
+                timerFg.style.stroke = '#dc3545'; // Turn red in last 5 seconds
+            }
+
             if (timeLeft <= 0) {
                 clearInterval(questionTimer);
-                countdownDiv.remove();
                 submitAnswer(); // Auto-submit on time out
             }
         }, 1000);
@@ -286,12 +318,16 @@ function enableSubmitForText() {
 
 function submitAnswer() {
     clearInterval(questionTimer);
-    document.getElementById('countdownTimer').style.display = 'none';
+    const oldTimer = document.querySelector('.fancy-timer');
+    if (oldTimer) {
+        oldTimer.remove();
+    }
     document.getElementById('submitBtn').disabled = true;
     
     let isCorrect = false;
     const responseTime = Date.now() - questionStartTime;
     let selectedElement;
+    let points = null; // For speed-based scoring
     
     if (currentQuestion.inputType === 'text') {
         const userAnswer = document.getElementById('textAnswer').value.replace(/[-\s]/g, '');
@@ -303,6 +339,15 @@ function submitAnswer() {
             const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedElement);
             isCorrect = selectedIndex === currentQuestion.correct;
         }
+    }
+
+    // Calculate points for speed questions
+    if (isCorrect && currentQuestion.timeLimit) {
+        const basePoints = { easy: 1, medium: 2, hard: 3 };
+        const timeBonus = Math.max(0, window.questionTimeLeft / currentQuestion.timeLimit); // 0.0 to 1.0
+        points = basePoints[currentQuestion.difficulty] + (basePoints[currentQuestion.difficulty] * timeBonus);
+    } else if (!isCorrect) {
+        points = 0;
     }
 
     // Remove any existing feedback
@@ -331,7 +376,8 @@ function submitAnswer() {
         currentQuestion.id,
         isCorrect,
         responseTime,
-        currentQuestion.difficulty
+        currentQuestion.difficulty,
+        points // Pass the calculated points
     );
     
     saveState();

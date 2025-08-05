@@ -84,8 +84,17 @@ def get_adaptive_question():
 
 def format_question(question):
     """Format a question object for JSON response"""
+    # For interactive question types (Working Memory), don't include options
+    interactive_types = [
+        'digit-span', 'digit-span-reverse', 'letter-span', 'letter-span-reorder',
+        'visual-span', 'visual-span-reverse', 'n-back', 'visual-n-back',
+        'operation-span', 'task-switching-span', 'n-back-dual'
+    ]
+    
     # Parse options - handle both string and already parsed JSON
-    if isinstance(question.options, str):
+    if question.question_type in interactive_types:
+        options = []  # Interactive questions don't use multiple choice
+    elif isinstance(question.options, str):
         try:
             options = json.loads(question.options)
         except json.JSONDecodeError:

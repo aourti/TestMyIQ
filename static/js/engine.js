@@ -60,7 +60,7 @@ export class AdaptiveTestEngine {
         return { ...availableQuestions[randomIndex], difficulty };
     }
     
-    recordResponse(domain, questionId, correct, responseTime, difficulty) {
+    recordResponse(domain, questionId, correct, responseTime, difficulty, points = null) {
         this.responses.push({
             domain,
             questionId,
@@ -82,7 +82,8 @@ export class AdaptiveTestEngine {
         this.domainScores[domain].total++;
         if (correct) {
             this.domainScores[domain].correct++;
-            this.domainScores[domain].points += this.getDifficultyPoints(difficulty);
+            // Use provided points if available, otherwise calculate based on difficulty
+            this.domainScores[domain].points += (points !== null) ? points : this.getDifficultyPoints(difficulty);
         }
         this.domainScores[domain].difficulties[difficulty]++;
     }

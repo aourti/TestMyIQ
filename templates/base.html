@@ -403,7 +403,7 @@
     <!-- Footer -->
     <footer class="mt-5 py-4 bg-light">
         <div class="container text-center">
-            <p class="mb-2" style="color: #495057;">© 2025 TestMyIQ.ai. Empowering minds, one test at a time.</p>
+            <p class="mb-2" style="color: #495057;">© 2025 TestMyIQ.ai. Empowering minds, one test at a time. - Version: {{ app_version }}</p>
             <div class="social-links">
                 <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-facebook"></i></a>
                 <a href="#" class="text-muted mx-2" style="color: #6c757d !important;"><i class="bi bi-twitter"></i></a>
@@ -611,5 +611,7 @@
     {% block scripts %}{% endblock %}
 <script src="/js/enhanced.js"></script>    
 <script src="{{ url_for('static', filename='js/scientific-iq-calculator.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/engine.js') }}"></script>
 </body>
 </html>

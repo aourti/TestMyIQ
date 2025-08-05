@@ -5,6 +5,7 @@ from config import Config
 from extensions import db, login_manager, migrate
 from datetime import datetime, timedelta
 from sqlalchemy import func
+import subprocess
 
 def create_app():
     app = Flask(__name__, static_url_path='', static_folder='static')
@@ -131,6 +132,15 @@ def create_app():
                              user_stats=user_stats,
                              recent_performance=recent_performance,
                              leaderboard=leaderboard)
+
+    @app.context_processor
+    def inject_app_version():
+        try:
+            with open('VERSION') as f:
+                version = f.read().strip()
+        except FileNotFoundError:
+            version = '0.0.1'
+        return dict(app_version=version)
 
     return app
 

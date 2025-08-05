@@ -58,22 +58,59 @@ h1 {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.countdown-timer {
-    position: fixed;
-    top: 20px;
+.fancy-timer {
+    position: absolute;
+    top: 15px;
     right: 20px;
-    transform: none;
-    background: rgba(0, 0, 0, 0.4);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 15px;
-    font-size: 2em;
+    width: 60px;
+    height: 60px;
+    z-index: 1050;
+}
+
+.fancy-timer .timer-svg {
+    transform: rotate(-90deg);
+}
+
+.fancy-timer .timer-bg {
+    fill: none;
+    stroke: #e9ecef;
+    stroke-width: 4;
+}
+
+.fancy-timer .timer-fg {
+    fill: none;
+    stroke: #667eea;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+
+.fancy-timer .timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
     font-weight: bold;
-    z-index: 1000;
-    display: none;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    color: #333;
+}
+
+.countdown-timer {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
 }
 
 .progress-container {
@@ -497,6 +534,20 @@ h1 {
     color: #2d3748; /* Darker text for better readability */
     line-height: 1.6;
     margin-bottom: 10px;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
+}
+
+footer p {
+    margin: 0;
 }
 
 /* Loading styles */
