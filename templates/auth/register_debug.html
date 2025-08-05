@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Register - TestMyIQ.ai{% endblock %}
+
+{% block content %}
+<style>
+/* Override all CSS that might hide the age field */
+* { display: initial !important; visibility: visible !important; }
+.form-group { margin: 15px 0 !important; }
+label { display: block !important; margin: 5px 0 !important; }
+input { display: block !important; width: 90% !important; padding: 8px !important; margin: 5px 0 !important; }
+</style>
+
+<div style="max-width: 500px; margin: 50px auto; padding: 20px; background: white; border: 2px solid black;">
+    <h2 style="color: black;">Create Account - Debug Version</h2>
+    
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <div style="margin: 20px 0; border: 2px solid blue; padding: 10px;">
+            <label for="username" style="color: black; font-weight: bold;">Username</label>
+            <input type="text" id="username" name="username" required style="border: 1px solid black;">
+        </div>
+        
+        <div style="margin: 20px 0; border: 2px solid blue; padding: 10px;">
+            <label for="email" style="color: black; font-weight: bold;">Email</label>
+            <input type="email" id="email" name="email" required style="border: 1px solid black;">
+        </div>
+        
+        <div style="margin: 20px 0; border: 5px solid red; padding: 15px; background: yellow;">
+            <label for="age" style="color: red; font-weight: bold; font-size: 18px;">Age (SHOULD BE VISIBLE NOW)</label>
+            <input type="number" id="age" name="age" required min="13" max="120" value="18" 
+                   style="border: 3px solid red; background: lightgreen; padding: 10px; font-size: 16px;">
+            <small style="color: red; font-weight: bold;">Used for accurate IQ score calculations</small>
+        </div>
+        
+        <div style="margin: 20px 0; border: 2px solid blue; padding: 10px;">
+            <label for="password" style="color: black; font-weight: bold;">Password</label>
+            <input type="password" id="password" name="password" required style="border: 1px solid black;">
+        </div>
+        
+        <button type="submit" style="background: blue; color: white; padding: 10px 20px; border: none;">Create Account</button>
+    </form>
+</div>
+{% endblock %}

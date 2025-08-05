@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
+    age = db.Column(db.Integer, default=18)  # Age for IQ calculation accuracy
     tests = db.relationship('TestSession', backref='user', lazy=True)
     # In models/user.py
     xp = db.Column(db.Integer, default=0)

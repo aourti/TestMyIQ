@@ -11,6 +11,21 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        age = request.form.get('age')
+        
+        # Validate age
+        if not age or age.strip() == '':
+            flash('Age is required')
+            return redirect(url_for('auth.register'))
+            
+        try:
+            age = int(age)
+            if age < 13 or age > 120:
+                flash('Please enter a valid age between 13 and 120')
+                return redirect(url_for('auth.register'))
+        except (ValueError, TypeError):
+            flash('Please enter a valid age')
+            return redirect(url_for('auth.register'))
         
         if User.query.filter_by(username=username).first():
             flash('Username already exists')
@@ -20,7 +35,7 @@ def register():
             flash('Email already registered')
             return redirect(url_for('auth.register'))
             
-        user = User(username=username, email=email)
+        user = User(username=username, email=email, age=age)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()

@@ -194,7 +194,10 @@ def finish(session_id):
         return jsonify({'error': 'Unauthorized'}), 403
         
     session.end_time = datetime.utcnow()
-    session.calculate_score()
+    
+    # Calculate IQ score with user's age (default to 18 if not available)
+    user_age = getattr(current_user, 'age', 18)
+    session.calculate_score(user_age)
     db.session.commit()
     
     return render_template('test/results.html', session=session)

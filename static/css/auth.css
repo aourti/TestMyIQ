@@ -55,6 +55,17 @@
     color: #94a3b8;
 }
 
+.auth-container .form-text {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.auth-container .text-muted {
+    color: #64748b !important;
+}
+
 .auth-container .btn {
     width: 100%;
     padding: 1rem;

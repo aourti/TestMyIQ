@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from extensions import db
 from models.test_session import TestSession
 from models.response import Response
 from models.question import Question
+from models.user import User
 from sqlalchemy import func
 import json
 
@@ -113,3 +114,38 @@ def index():
                          avg_response_time=round(avg_response_time, 2),
                          scores_trend=json.dumps(scores_trend),
                          recent_tests=recent_tests)
+
+@profile_bp.route('/update', methods=['POST'])
+@login_required
+def update():
+    username = request.form.get('username')
+    email = request.form.get('email')
+    age = request.form.get('age')
+    
+    # Validate age
+    try:
+        age = int(age)
+        if age < 13 or age > 120:
+            flash('Please enter a valid age between 13 and 120', 'error')
+            return redirect(url_for('profile.index'))
+    except (ValueError, TypeError):
+        flash('Please enter a valid age', 'error')
+        return redirect(url_for('profile.index'))
+    
+    # Check if username or email already exists (excluding current user)
+    if User.query.filter(User.username == username, User.id != current_user.id).first():
+        flash('Username already exists', 'error')
+        return redirect(url_for('profile.index'))
+        
+    if User.query.filter(User.email == email, User.id != current_user.id).first():
+        flash('Email already registered', 'error')
+        return redirect(url_for('profile.index'))
+    
+    # Update user information
+    current_user.username = username
+    current_user.email = email
+    current_user.age = age
+    
+    db.session.commit()
+    flash('Profile updated successfully!', 'success')
+    return redirect(url_for('profile.index'))

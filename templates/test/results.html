@@ -12,13 +12,72 @@
             <div class="col-md-6 mx-auto">
                 <div class="score-summary card">
                     <div class="card-body text-center">
-                        <h3 class="card-title">Your Score</h3>
-                        <h2 class="display-3 text-primary">{{ session.score or 0 }}</h2>
-                        <p class="text-muted">IQ Score</p>
+                        <h3 class="card-title">Your IQ Score</h3>
+                        <h2 class="display-3 text-primary">{{ session.fsiq or session.score or 0 }}</h2>
+                        <p class="text-muted">Full Scale IQ (FSIQ)</p>
+                        {% if session.percentile %}
+                            <p class="lead">{{ session.percentile | round(1) }}th percentile</p>
+                        {% endif %}
+                        {% if session.classification %}
+                            <span class="badge bg-info fs-6">{{ session.classification }}</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        
+        {% if session.get_domain_scores_dict() %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">🧠 Cognitive Domain Breakdown</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for domain, score in session.get_domain_scores_dict().items() %}
+                            <div class="col-md-4 mb-3">
+                                <div class="domain-score text-center">
+                                    <h5>{{ domain.replace('_', ' ').title() }}</h5>
+                                    <div class="score-circle mx-auto mb-2">
+                                        <span class="score-value">{{ score | round(0) }}</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ ((score - 70) / 60 * 100) | max(0) | min(100) }}%" 
+                                             aria-valuenow="{{ score }}" aria-valuemin="70" aria-valuemax="130">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if session.get_confidence_interval_dict() %}
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h5 class="mb-0">📊 Statistical Analysis</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        {% set ci = session.get_confidence_interval_dict() %}
+                        {% if ci.get('95%') %}
+                            <p><strong>95% Confidence Interval:</strong> {{ ci['95%']['lower'] | round(0) }} - {{ ci['95%']['upper'] | round(0) }}</p>
+                        {% endif %}
+                        {% if session.reliability_coefficient %}
+                            <p><strong>Reliability Coefficient:</strong> {{ (session.reliability_coefficient * 100) | round(1) }}%</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         
         <div class="row mb-4">
             <div class="col-md-4">
@@ -149,6 +208,32 @@
 
 .question-item.border-danger {
     border-left: 4px solid #dc3545 !important;
+}
+
+.domain-score {
+    padding: 1rem;
+}
+
+.score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #6610f2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
 }
 </style>
 {% endblock %}
