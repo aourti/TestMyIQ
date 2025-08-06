@@ -15,8 +15,12 @@ export class AdaptiveTestEngine {
                 console.error('HTTP error:', response.status); // Debug log
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            this.questionBank = await response.json();
+            const data = await response.json();
+            this.questionBank = data.questions;
+            // Store the randomized category order
+            window.randomizedDomains = data.category_order || window.domains;
             console.log('Questions loaded:', this.questionBank); // Debug log
+            console.log('Randomized domain order:', window.randomizedDomains); // Debug log
             this.initialized = true;
             return true;
         } catch (error) {

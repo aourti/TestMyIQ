@@ -292,21 +292,11 @@ let questionHistory = [];
 // Adaptive testing variables
 let currentCategoryIndex = 0;
 let categoryProgress = {};
-let isShowingCategoryIntro = false;
-const categories = ['Verbal Comprehension', 'Perceptual Reasoning', 'Working Memory', 'Processing Speed', 'Fluid Reasoning'];
 const questionsPerCategory = 3;
 
-// Category descriptions for introductions
-const categoryDescriptions = {
-    'Verbal Comprehension': 'These questions test your understanding of language, vocabulary, and verbal reasoning.',
-    'Perceptual Reasoning': 'These questions assess your ability to analyze visual information and solve non-verbal problems.',
-    'Working Memory': 'These questions test your ability to hold and manipulate information in your mind.',
-    'Processing Speed': 'These questions measure how quickly you can process simple information.',
-    'Fluid Reasoning': 'These questions test your ability to think logically and solve new problems.'
-};
-
-// Initialize category progress
-categories.forEach(category => {
+// Initialize category progress for default categories (will be updated with randomized order)
+const defaultCategories = ['Verbal Comprehension', 'Perceptual Reasoning', 'Working Memory', 'Processing Speed', 'Fluid Reasoning'];
+defaultCategories.forEach(category => {
     categoryProgress[category] = {
         questionsAnswered: 0,
         difficulty: 'easy',
@@ -317,89 +307,129 @@ categories.forEach(category => {
 
 // Initialize test
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Updated TestMyIQ System v3.0 - Category Transitions Active');
     loadQuestions();
     startTimer();
 });
 
 // Load initial questions
 async function loadQuestions() {
-    // Initialize empty questions array for the adaptive system
-    questions = [];
-    
-    // Hide loading, show question container
-    document.getElementById('loading-container').style.display = 'none';
-    document.getElementById('question-container').style.display = 'block';
-    document.getElementById('navigation-controls').style.display = 'flex';
-    document.getElementById('total-questions').textContent = categories.length * questionsPerCategory;
-    
-    // Start with first category introduction
-    showCategoryIntroduction(categories[currentCategoryIndex]);
+    try {
+        // Load the randomized categories from the server
+        const response = await fetch('/test/get_questions');
+        const data = await response.json();
+        
+        if (data.category_order && data.category_order.length > 0) {
+            // Use the randomized category order from server
+            window.randomizedCategories = data.category_order;
+            console.log('🔀 Randomized category order:', window.randomizedCategories);
+        } else {
+            // Fallback to default order
+            window.randomizedCategories = categories;
+        }
+        
+        // Initialize empty questions array for the adaptive system
+        questions = [];
+        
+        // Hide loading, show question container
+        document.getElementById('loading-container').style.display = 'none';
+        document.getElementById('question-container').style.display = 'block';
+        document.getElementById('navigation-controls').style.display = 'flex';
+        document.getElementById('total-questions').textContent = window.randomizedCategories.length * questionsPerCategory;
+        
+        // Start first category with transition animation (no landing page)
+        await showCategoryTransition(window.randomizedCategories[currentCategoryIndex]);
+        startCategoryQuestions();
+    } catch (error) {
+        console.error('❌ Error loading questions:', error);
+        showNoQuestions();
+    }
 }
 
-// Show category introduction
-function showCategoryIntroduction(categoryName) {
+// Show category transition animation (replaces landing pages)
+async function showCategoryTransition(categoryName) {
+    console.log(`🎬 Showing transition for category: ${categoryName}`);
+    
     const questionContainer = document.getElementById('question-container');
-    const description = categoryDescriptions[categoryName];
     const categoryIndex = currentCategoryIndex + 1;
-    const totalCategories = categories.length;
+    const totalCategories = window.randomizedCategories ? window.randomizedCategories.length : categories.length;
     
-    isShowingCategoryIntro = true;
+    // Category icons mapping
+    const categoryIcons = {
+        'Verbal Comprehension': '🗣️',
+        'Perceptual Reasoning': '🧩', 
+        'Working Memory': '🧠',
+        'Processing Speed': '⚡',
+        'Fluid Reasoning': '💡'
+    };
     
+    const icon = categoryIcons[categoryName] || '🎯';
+    
+    // Show transition animation
     questionContainer.innerHTML = `
-        <div class="category-introduction" style="text-align: center; padding: 2rem;">
-            <div class="category-header" style="margin-bottom: 2rem;">
-                <h1 style="color: #667eea; margin-bottom: 0.5rem;">Category ${categoryIndex} of ${totalCategories}</h1>
-                <h2 style="color: #333; margin-bottom: 1rem;">${categoryName}</h2>
-                <div class="progress-bar" style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; margin: 1rem 0;">
-                    <div class="progress-fill" style="width: ${(categoryIndex-1)/totalCategories*100}%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 4px; transition: width 0.5s ease;"></div>
-                </div>
+        <div class="category-transition" style="text-align: center; padding: 3rem; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="transition-icon" style="font-size: 4rem; margin-bottom: 1rem; animation: bounce 1s ease-in-out infinite;">${icon}</div>
+            <h2 style="color: #667eea; margin-bottom: 0.5rem; opacity: 0; animation: fadeInUp 0.8s ease-out 0.3s forwards;">${categoryName}</h2>
+            <div style="color: #666; font-size: 1.1rem; opacity: 0; animation: fadeInUp 0.8s ease-out 0.6s forwards;">Category ${categoryIndex} of ${totalCategories}</div>
+            <div class="loading-dots" style="margin-top: 2rem;">
+                <span style="animation: dotPulse 1.4s infinite 0s;">•</span>
+                <span style="animation: dotPulse 1.4s infinite 0.2s;">•</span>
+                <span style="animation: dotPulse 1.4s infinite 0.4s;">•</span>
             </div>
-            
-            <div class="category-description" style="max-width: 600px; margin: 0 auto 2rem auto;">
-                <p style="font-size: 1.2rem; color: #666; line-height: 1.6;">${description}</p>
-            </div>
-            
-            <div class="category-stats" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
-                <h3 style="color: #333; margin-bottom: 1rem;">What to Expect</h3>
-                <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-                    <div style="text-align: center; margin: 0.5rem;">
-                        <div style="font-size: 2rem; color: #667eea; font-weight: bold;">${questionsPerCategory}</div>
-                        <div style="color: #666; font-size: 0.9rem;">Questions</div>
-                    </div>
-                    <div style="text-align: center; margin: 0.5rem;">
-                        <div style="font-size: 2rem; color: #667eea; font-weight: bold;">⚡</div>
-                        <div style="color: #666; font-size: 0.9rem;">Adaptive Difficulty</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button onclick="startCategoryQuestions()" class="btn-start-category" 
-                    style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; 
-                           padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px; cursor: pointer; 
-                           transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
-                Begin ${categoryName} Questions
-            </button>
         </div>
     `;
     
-    // Add hover effect to button
-    const button = questionContainer.querySelector('.btn-start-category');
-    button.addEventListener('mouseenter', () => {
-        button.style.transform = 'translateY(-2px)';
-        button.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+    // Return a promise that resolves after the transition duration
+    return new Promise(resolve => {
+        setTimeout(resolve, 2000); // 2 second transition
     });
-    button.addEventListener('mouseleave', () => {
-        button.style.transform = 'translateY(0)';
-        button.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
-    });
-    
-    console.log(`📚 Showing introduction for category: ${categoryName}`);
 }
 
-// Start category questions after introduction
+// Add CSS for transition animations
+const transitionStyles = document.createElement('style');
+transitionStyles.textContent = `
+    @keyframes bounce {
+        0%, 20%, 60%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        80% { transform: translateY(-5px); }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes dotPulse {
+        0%, 80%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+        40% {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+    }
+    
+    .loading-dots span {
+        font-size: 2rem;
+        color: #667eea;
+        margin: 0 0.2rem;
+        display: inline-block;
+    }
+`;
+document.head.appendChild(transitionStyles);
+
+// Start category questions after transition
 async function startCategoryQuestions() {
-    isShowingCategoryIntro = false;
-    const currentCategory = categories[currentCategoryIndex];
+    console.log(`🚀 Starting questions for category: ${window.randomizedCategories[currentCategoryIndex]}`);
+    
+    const currentCategory = window.randomizedCategories[currentCategoryIndex];
     
     // Mark category as introduced
     categoryProgress[currentCategory].introduced = true;
@@ -424,8 +454,9 @@ async function startCategoryQuestions() {
         console.log('No questions available for category, skipping');
         // Move to next category
         currentCategoryIndex++;
-        if (currentCategoryIndex < categories.length) {
-            showCategoryIntroduction(categories[currentCategoryIndex]);
+        if (currentCategoryIndex < window.randomizedCategories.length) {
+            await showCategoryTransition(window.randomizedCategories[currentCategoryIndex]);
+            startCategoryQuestions();
         } else {
             finishTest();
         }
@@ -749,13 +780,14 @@ async function handleAdaptiveProgression(currentQuestion, isCorrect) {
         // Move to next category
         currentCategoryIndex++;
         
-        if (currentCategoryIndex >= categories.length) {
+        if (currentCategoryIndex >= window.randomizedCategories.length) {
             // All categories completed
             finishTest();
             return;
         } else {
-            // Show next category introduction
-            showCategoryIntroduction(categories[currentCategoryIndex]);
+            // Show next category transition and start
+            await showCategoryTransition(window.randomizedCategories[currentCategoryIndex]);
+            startCategoryQuestions();
             return;
         }
     }
@@ -780,8 +812,9 @@ async function handleAdaptiveProgression(currentQuestion, isCorrect) {
         console.log('No more questions available for category, moving to next category');
         // Skip to next category if no questions available
         currentCategoryIndex++;
-        if (currentCategoryIndex < categories.length) {
-            showCategoryIntroduction(categories[currentCategoryIndex]);
+        if (currentCategoryIndex < window.randomizedCategories.length) {
+            await showCategoryTransition(window.randomizedCategories[currentCategoryIndex]);
+            startCategoryQuestions();
         } else {
             finishTest();
         }
@@ -838,13 +871,8 @@ async function submitAnswer(questionId, answer, isCorrect = null) {
 
 // Update progress display
 function updateProgress() {
-    if (isShowingCategoryIntro) {
-        // Don't update progress during category introductions
-        return;
-    }
-    
     const totalAnswered = Object.keys(answers).length;
-    const totalQuestions = categories.length * questionsPerCategory;
+    const totalQuestions = window.randomizedCategories ? window.randomizedCategories.length * questionsPerCategory : categories.length * questionsPerCategory;
     const progress = (totalAnswered / totalQuestions) * 100;
     
     // Update main progress bar
@@ -854,7 +882,7 @@ function updateProgress() {
     // Update category-specific progress if we have a current question
     if (questions[currentQuestionIndex]) {
         const currentCategory = questions[currentQuestionIndex].category;
-        const categoryIndex = categories.indexOf(currentCategory);
+        const categoryIndex = window.randomizedCategories ? window.randomizedCategories.indexOf(currentCategory) : categories.indexOf(currentCategory);
         const categoryQuestionsAnswered = categoryProgress[currentCategory]?.questionsAnswered || 0;
         
         // Update the category indicator in the UI

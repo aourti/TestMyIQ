@@ -13,13 +13,24 @@
                 <div class="score-summary card">
                     <div class="card-body text-center">
                         <h3 class="card-title">Your IQ Score</h3>
-                        <h2 class="display-3 text-primary">{{ session.fsiq or session.score or 0 }}</h2>
-                        <p class="text-muted">Full Scale IQ (FSIQ)</p>
+                        <h2 class="display-3 score-main">{{ session.fsiq or session.score or 0 }}</h2>
+                        <p class="text-muted">
+                            Full Scale IQ (FSIQ)
+                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                  title="Full Scale IQ (FSIQ) is your overall cognitive ability score, derived from performance across all cognitive domains. Average range is 85-115.">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </p>
                         {% if session.percentile %}
-                            <p class="lead">{{ session.percentile | round(1) }}th percentile</p>
+                            <p class="lead">{{ session.percentile | round(1) }}th percentile
+                                <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                      title="Percentile shows what percentage of people scored lower than you. For example, 75th percentile means you scored higher than 75% of people.">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </p>
                         {% endif %}
                         {% if session.classification %}
-                            <span class="badge bg-info fs-6">{{ session.classification }}</span>
+                            <span class="badge classification-badge fs-6">{{ session.classification }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -29,22 +40,56 @@
         {% if session.get_domain_scores_dict() %}
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">🧠 Cognitive Domain Breakdown</h4>
+                <div class="card domain-card">
+                    <div class="card-header domain-header">
+                        <h4 class="mb-0">
+                            🧠 Cognitive Domain Breakdown
+                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                  title="These are the five main areas of cognitive ability measured in the test. Each domain represents different mental skills and abilities.">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             {% for domain, score in session.get_domain_scores_dict().items() %}
                             <div class="col-md-4 mb-3">
                                 <div class="domain-score text-center">
-                                    <h5>{{ domain.replace('_', ' ').title() }}</h5>
+                                    <h5>
+                                        {{ domain.replace('_', ' ').title() }}
+                                        {% if domain == 'verbal_comprehension' %}
+                                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                  title="Measures understanding of words, sentences, and language-based reasoning.">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        {% elif domain == 'perceptual_reasoning' %}
+                                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                  title="Measures visual-spatial processing, pattern recognition, and non-verbal reasoning.">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        {% elif domain == 'working_memory' %}
+                                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                  title="Measures ability to hold and manipulate information in your mind temporarily.">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        {% elif domain == 'processing_speed' %}
+                                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                  title="Measures how quickly you can process simple information and perform mental tasks.">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        {% elif domain == 'fluid_reasoning' %}
+                                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                  title="Measures ability to solve novel problems using logic and reasoning, independent of prior knowledge.">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        {% endif %}
+                                    </h5>
                                     <div class="score-circle mx-auto mb-2">
                                         <span class="score-value">{{ score | round(0) }}</span>
                                     </div>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" 
-                                             style="width: {{ ((score - 70) / 60 * 100) | max(0) | min(100) }}%" 
+                                    <div class="progress custom-progress">
+                                        <div class="progress-bar custom-progress-bar" role="progressbar" 
+                                             style="width: {% set width = ((score - 70) / 60 * 100) %}{% if width < 0 %}0{% elif width > 100 %}100{% else %}{{ width }}{% endif %}%" 
                                              aria-valuenow="{{ score }}" aria-valuemin="70" aria-valuemax="130">
                                         </div>
                                     </div>
@@ -61,17 +106,33 @@
         {% if session.get_confidence_interval_dict() %}
         <div class="row mb-4">
             <div class="col-md-6 mx-auto">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">📊 Statistical Analysis</h5>
+                <div class="card stats-card">
+                    <div class="card-header stats-header text-center">
+                        <h5 class="mb-0">
+                            📊 Statistical Analysis
+                            <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                  title="Statistical measures that help interpret the accuracy and reliability of your test results.">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </h5>
                     </div>
                     <div class="card-body text-center">
                         {% set ci = session.get_confidence_interval_dict() %}
                         {% if ci.get('95%') %}
-                            <p><strong>95% Confidence Interval:</strong> {{ ci['95%']['lower'] | round(0) }} - {{ ci['95%']['upper'] | round(0) }}</p>
+                            <p><strong>95% Confidence Interval:</strong> {{ ci['95%']['lower'] | round(0) }} - {{ ci['95%']['upper'] | round(0) }}
+                                <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                      title="There's a 95% probability that your true IQ score falls within this range. This accounts for measurement error.">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </p>
                         {% endif %}
                         {% if session.reliability_coefficient %}
-                            <p><strong>Reliability Coefficient:</strong> {{ (session.reliability_coefficient * 100) | round(1) }}%</p>
+                            <p><strong>Reliability Coefficient:</strong> {{ (session.reliability_coefficient * 100) | round(1) }}%
+                                <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                      title="Indicates how consistent and reliable the test results are. Higher percentages indicate more reliable measurements.">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </p>
                         {% endif %}
                     </div>
                 </div>
@@ -81,11 +142,11 @@
         
         <div class="row mb-4">
             <div class="col-md-4">
-                <div class="stat-card card">
+                <div class="stat-card card stat-time">
                     <div class="card-body text-center">
-                        <i class="fas fa-clock text-info mb-2" style="font-size: 2rem;"></i>
+                        <i class="fas fa-clock stat-icon mb-2"></i>
                         <h5>Time Taken</h5>
-                        <h4 class="text-info">
+                        <h4 class="stat-value">
                             {% if session.end_time and session.start_time %}
                                 {{ ((session.end_time - session.start_time).total_seconds() / 60) | round(1) }} min
                             {% else %}
@@ -97,21 +158,21 @@
             </div>
             
             <div class="col-md-4">
-                <div class="stat-card card">
+                <div class="stat-card card stat-questions">
                     <div class="card-body text-center">
-                        <i class="fas fa-chart-line text-success mb-2" style="font-size: 2rem;"></i>
+                        <i class="fas fa-chart-line stat-icon mb-2"></i>
                         <h5>Questions Answered</h5>
-                        <h4 class="text-success">{{ session.responses | length }}</h4>
+                        <h4 class="stat-value">{{ session.responses | length }}</h4>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-4">
-                <div class="stat-card card">
+                <div class="stat-card card stat-correct">
                     <div class="card-body text-center">
-                        <i class="fas fa-target text-warning mb-2" style="font-size: 2rem;"></i>
+                        <i class="fas fa-target stat-icon mb-2"></i>
                         <h5>Correct Answers</h5>
-                        <h4 class="text-warning">{{ session.responses | selectattr('is_correct') | list | length }}</h4>
+                        <h4 class="stat-value">{{ session.responses | selectattr('is_correct') | list | length }}</h4>
                     </div>
                 </div>
             </div>
@@ -123,21 +184,21 @@
             <div class="row">
                 {% for response in session.responses %}
                 <div class="col-12 mb-3">
-                    <div class="card question-item {{ 'border-success' if response.is_correct else 'border-danger' }}">
+                    <div class="card question-item {{ 'question-correct' if response.is_correct else 'question-incorrect' }}">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="badge {{ 'bg-success' if response.is_correct else 'bg-danger' }}">
+                                <span class="badge {{ 'correct-badge' if response.is_correct else 'incorrect-badge' }}">
                                     {{ '✓ Correct' if response.is_correct else '✗ Incorrect' }}
                                 </span>
                                 {% if response.question.category %}
-                                    <span class="badge bg-primary ms-2">{{ response.question.category }}</span>
+                                    <span class="badge category-badge ms-2">{{ response.question.category }}</span>
                                 {% endif %}
                                 {% if response.question.difficulty %}
-                                    <span class="badge bg-secondary ms-1">{{ response.question.difficulty.upper() }}</span>
+                                    <span class="badge difficulty-badge ms-1">{{ response.question.difficulty.upper() }}</span>
                                 {% endif %}
                             </div>
                             {% if response.response_time %}
-                                <small class="text-muted">{{ response.response_time | round(1) }}s</small>
+                                <small class="time-display">{{ response.response_time | round(1) }}s</small>
                             {% endif %}
                         </div>
                         <div class="card-body">
@@ -146,7 +207,7 @@
                                 <strong>Your answer:</strong> {{ response.user_answer }}
                             </p>
                             {% if not response.is_correct and response.question.correct_answer %}
-                                <p class="card-text text-success">
+                                <p class="card-text correct-answer-display">
                                     <strong>Correct answer:</strong> 
                                     {% if response.question.options %}
                                         {% if response.question.correct_answer | int < response.question.options | length %}
@@ -168,10 +229,10 @@
         {% endif %}
         
         <div class="actions text-center mt-4">
-            <a href="{{ url_for('test.start') }}" class="btn btn-primary btn-lg me-3">
+            <a href="{{ url_for('test.start') }}" class="btn btn-primary-custom btn-lg me-3">
                 <i class="fas fa-redo"></i> Take Another Test
             </a>
-            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-lg">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary-custom btn-lg">
                 <i class="fas fa-home"></i> Back to Home
             </a>
         </div>
@@ -222,7 +283,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.score-circle .score-value {
+    color: white !important;
     font-weight: bold;
     font-size: 1.2rem;
 }
@@ -236,4 +303,27 @@
     background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
 }
 </style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize Bootstrap tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing tooltips...');
+    
+    // Wait a bit to ensure Bootstrap is fully loaded
+    setTimeout(function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        console.log('Found ' + tooltipTriggerList.length + ' tooltip triggers');
+        
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: true
+            });
+        });
+        
+        console.log('Tooltips initialized:', tooltipList.length);
+    }, 100);
+});
+</script>
 {% endblock %}

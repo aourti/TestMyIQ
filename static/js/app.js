@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.questionStartTime;
     window.userAge = 12;
     window.domains = ["Verbal Comprehension", "Perceptual Reasoning", "Working Memory", "Processing Speed", "Fluid Reasoning"];
+    window.randomizedDomains = []; // Will hold the randomized order from server
+    
+    console.log('🎯 Updated test system loaded - v2.0');
 
     // Initialize the application
     checkSavedSession();
@@ -52,6 +55,7 @@ function resumeTest() {
         domainIndex = savedState.domainIndex || 0;
         userAge = savedState.userAge || 12;
         startTime = Date.now() - (savedState.elapsedTime || 0);
+        window.randomizedDomains = savedState.randomizedDomains || [];
         
         // Load questions and continue
         initializeTest(true);
@@ -89,12 +93,14 @@ async function initializeTest(resuming = false) {
         }
         startTimer();
         
-        if (resuming && domainIndex < domains.length) {
-            currentDomain = domains[domainIndex];
+        if (resuming && domainIndex < (window.randomizedDomains.length || domains.length)) {
+            currentDomain = (window.randomizedDomains.length > 0 ? window.randomizedDomains : domains)[domainIndex];
             showNextQuestion();
         } else {
             domainIndex = 0; // Reset for new test
-            showSectionIntro();
+            // Start directly with first question instead of section intro
+            currentDomain = (window.randomizedDomains.length > 0 ? window.randomizedDomains : domains)[domainIndex];
+            showCategoryTransition();
         }
     }, 1000);
 }
@@ -108,40 +114,59 @@ function startTimer() {
     }, 1000);
 }
 
-function showSectionIntro() {
-    if (domainIndex >= domains.length) {
+function showCategoryTransition() {
+    const activeDomains = window.randomizedDomains.length > 0 ? window.randomizedDomains : domains;
+    
+    if (domainIndex >= activeDomains.length) {
         showResults();
         return;
     }
     
-    currentDomain = domains[domainIndex];
+    currentDomain = activeDomains[domainIndex];
+    
+    console.log(`🎯 Showing category transition for: ${currentDomain} (${domainIndex + 1}/${activeDomains.length})`);
+    console.log(`📋 Category order: ${activeDomains.join(' → ')}`);
+    
+    // Show category transition animation
     const html = `
-        <div class="question">
-            <h2>${currentDomain}</h2>
-            <p class="question-text">${getSectionDescription(currentDomain)}</p>
-            <div class="adaptive-info">
-                <p><strong>Adaptive Testing:</strong> Questions will adjust to your performance level.</p>
-                <p>Starting with medium difficulty questions.</p>
+        <div class="category-transition">
+            <div class="category-animation">
+                <div class="category-icon">
+                    ${getCategoryIcon(currentDomain)}
+                </div>
+                <h2 class="category-name">${currentDomain}</h2>
+                <div class="category-progress">
+                    <span>Category ${domainIndex + 1} of ${activeDomains.length}</span>
+                </div>
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
-        <div class="navigation">
-            <button class="btn" onclick="startSection()">Begin Section</button>
-        </div>
     `;
+    
     document.getElementById('test-container').innerHTML = html;
+    
+    // Show animation for 2 seconds then start questions
+    setTimeout(() => {
+        showNextQuestion();
+    }, 2000);
 }
 
-function getSectionDescription(domain) {
-    const descriptions = {
-        "Verbal Comprehension": "This section measures your understanding of language, vocabulary, and verbal reasoning.",
-        "Perceptual Reasoning": "This section tests your ability to analyze visual information and recognize patterns.",
-        "Working Memory": "This section tests your ability to remember and manipulate information. You'll need to type responses from memory.",
-        "Processing Speed": "This section measures how quickly and accurately you can process information. Work as fast as you can!",
-        "Fluid Reasoning": "This section tests your ability to solve new problems using logic and reasoning."
+function getCategoryIcon(domain) {
+    const icons = {
+        "Verbal Comprehension": "🗣️",
+        "Perceptual Reasoning": "🧩", 
+        "Working Memory": "🧠",
+        "Processing Speed": "⚡",
+        "Fluid Reasoning": "💡"
     };
-    return descriptions[domain];
+    return icons[domain] || "🎯";
 }
 
+// Remove the old showSectionIntro function and replace startSection calls
 function startSection() {
     showNextQuestion();
 }
@@ -153,7 +178,7 @@ function showNextQuestion() {
     if (testEngine.domainScores[currentDomain] && !testEngine.shouldContinueDomain(currentDomain)) {
         domainIndex++;
         saveState();
-        showSectionIntro();
+        showCategoryTransition();
         return;
     }
     
@@ -170,7 +195,7 @@ function showNextQuestion() {
     if (!currentQuestion) {
         domainIndex++;
         saveState();
-        showSectionIntro();
+        showCategoryTransition();
         return;
     }
     
@@ -393,7 +418,8 @@ function submitAnswer() {
 
 function updateProgress() {
     const totalResponses = testEngine.responses.length;
-    const estimatedTotal = domains.length * 7; // Adjusted average
+    const activeDomains = window.randomizedDomains.length > 0 ? window.randomizedDomains : domains;
+    const estimatedTotal = activeDomains.length * 7; // Adjusted average
     const progress = Math.min(100, Math.round((totalResponses / estimatedTotal) * 100));
     
     document.getElementById('progressBar').style.width = progress + '%';
@@ -407,7 +433,8 @@ function saveState() {
         currentDifficulty: testEngine.currentDifficulty,
         domainIndex: domainIndex,
         userAge: userAge,
-        elapsedTime: Date.now() - startTime
+        elapsedTime: Date.now() - startTime,
+        randomizedDomains: window.randomizedDomains // Save the randomized order
     };
     localStorage.setItem('iqTestState', JSON.stringify(state));
 }

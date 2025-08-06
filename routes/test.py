@@ -6,6 +6,7 @@ from models.test_session import TestSession
 from models.response import Response
 from sqlalchemy import func
 import json
+import random
 from datetime import datetime
 
 test_bp = Blueprint('test', __name__, url_prefix='/test')
@@ -14,6 +15,10 @@ test_bp = Blueprint('test', __name__, url_prefix='/test')
 def get_questions():
     # Get adaptive questions organized by category and difficulty
     categories = ['Verbal Comprehension', 'Perceptual Reasoning', 'Working Memory', 'Processing Speed', 'Fluid Reasoning']
+    
+    # Randomize the order of categories for each test session
+    random.shuffle(categories)
+    
     questions_data = []
     
     for category in categories:
@@ -22,7 +27,10 @@ def get_questions():
         for question in easy_questions:
             questions_data.append(format_question(question))
     
-    return jsonify(questions_data)
+    return jsonify({
+        'questions': questions_data,
+        'category_order': categories  # Return the randomized category order
+    })
 
 @test_bp.route('/get_adaptive_question', methods=['POST'])
 def get_adaptive_question():
@@ -103,6 +111,31 @@ def format_question(question):
     else:
         options = question.options or []
     
+    # Store the original correct answer before shuffling
+    original_correct_answer = question.correct_answer
+    
+    # Randomize options order and track correct answer
+    if options and len(options) > 1 and original_correct_answer is not None:
+        try:
+            # Get the correct answer text before shuffling
+            correct_idx = int(original_correct_answer)
+            if 0 <= correct_idx < len(options):
+                correct_answer_text = options[correct_idx]
+                
+                # Shuffle the options
+                random.shuffle(options)
+                
+                # Find the new index of the correct answer
+                new_correct_idx = options.index(correct_answer_text)
+                updated_correct_answer = new_correct_idx
+            else:
+                updated_correct_answer = original_correct_answer
+        except (ValueError, TypeError, IndexError):
+            # If there's any error, don't shuffle and keep original
+            updated_correct_answer = original_correct_answer
+    else:
+        updated_correct_answer = original_correct_answer
+        
     # Create question dict in the same format as the JSON file
     question_dict = {
         "id": question.id,
@@ -113,8 +146,8 @@ def format_question(question):
     }
     
     # Add optional fields if they exist
-    if question.correct_answer is not None:
-        question_dict["correct"] = int(question.correct_answer) if str(question.correct_answer).isdigit() else question.correct_answer
+    if updated_correct_answer is not None:
+        question_dict["correct"] = int(updated_correct_answer) if str(updated_correct_answer).isdigit() else updated_correct_answer
     if question.question_type:
         question_dict["type"] = question.question_type
     if question.points:
