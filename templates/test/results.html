@@ -43,7 +43,10 @@
                 <div class="card domain-card">
                     <div class="card-header domain-header">
                         <h4 class="mb-0">
-                            🧠 Cognitive Domain Breakdown
+                            <img src="/static/images/testmyiq_logo.png" 
+                                 alt="TestMyIQ" 
+                                 style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; vertical-align: middle;" />
+                            Cognitive Domain Breakdown
                             <span class="info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" 
                                   title="These are the five main areas of cognitive ability measured in the test. Each domain represents different mental skills and abilities.">
                                 <i class="fas fa-question-circle"></i>
@@ -55,6 +58,19 @@
                             {% for domain, score in session.get_domain_scores_dict().items() %}
                             <div class="col-md-4 mb-3">
                                 <div class="domain-score text-center">
+                                    <div class="domain-image-container mb-3">
+                                        {% if domain == 'verbal_comprehension' %}
+                                            <img src="{{ url_for('static', filename='images/verbal_comprehension.png') }}" alt="Verbal Comprehension" class="domain-image" />
+                                        {% elif domain == 'perceptual_reasoning' %}
+                                            <img src="{{ url_for('static', filename='images/perceptual_reasoning.png') }}" alt="Perceptual Reasoning" class="domain-image" />
+                                        {% elif domain == 'working_memory' %}
+                                            <img src="{{ url_for('static', filename='images/working_memory.png') }}" alt="Working Memory" class="domain-image" />
+                                        {% elif domain == 'processing_speed' %}
+                                            <img src="{{ url_for('static', filename='images/processing_speed.png') }}" alt="Processing Speed" class="domain-image" />
+                                        {% elif domain == 'fluid_reasoning' %}
+                                            <img src="{{ url_for('static', filename='images/fluid_reasoning.png') }}" alt="Fluid Reasoning" class="domain-image" />
+                                        {% endif %}
+                                    </div>
                                     <h5>
                                         {{ domain.replace('_', ' ').title() }}
                                         {% if domain == 'verbal_comprehension' %}
@@ -275,6 +291,25 @@
     padding: 1rem;
 }
 
+.domain-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.domain-image {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.domain-image:hover {
+    transform: scale(1.1);
+}
+
 .score-circle {
     width: 80px;
     height: 80px;
@@ -301,6 +336,35 @@
 
 .progress-bar {
     background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
+}
+
+/* Responsive Design for Domain Images */
+@media (max-width: 768px) {
+    .domain-image {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .domain-score {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .domain-image {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .domain-score {
+        padding: 0.5rem;
+    }
+    
+    .score-circle {
+        width: 70px;
+        height: 70px;
+        font-size: 1rem;
+    }
 }
 </style>
 {% endblock %}

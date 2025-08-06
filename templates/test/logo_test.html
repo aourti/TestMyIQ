@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logo Test</title>
+</head>
+<body>
+    <h1>Logo Display Test</h1>
+    
+    <h2>Direct Image Tag</h2>
+    <img src="/static/images/testmyiq_logo.png" alt="TestMyIQ Logo" style="width: 100px; height: 100px; border: 1px solid red;">
+    
+    <h2>Flask url_for</h2>
+    <img src="{{ url_for('static', filename='images/testmyiq_logo.png') }}" alt="TestMyIQ Logo" style="width: 100px; height: 100px; border: 1px solid blue;">
+    
+    <h2>Background Image</h2>
+    <div style="width: 100px; height: 100px; border: 1px solid green; background-image: url('/static/images/testmyiq_logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+    
+    <h2>Image with Error Handling</h2>
+    <img src="/static/images/testmyiq_logo.png" 
+         alt="TestMyIQ Logo" 
+         style="width: 100px; height: 100px; border: 1px solid purple;"
+         onload="console.log('Logo loaded successfully')"
+         onerror="console.error('Logo failed to load'); this.style.backgroundColor='red';">
+</body>
+</html>

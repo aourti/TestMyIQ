@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .image-test { margin: 20px 0; }
+        .image-test img { width: 120px; height: 120px; object-fit: contain; border: 1px solid #ccc; margin: 10px; }
+        .status { padding: 5px; margin: 5px 0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Category Images Test</h1>
+    
+    <div class="image-test">
+        <h3>Verbal Comprehension</h3>
+        <img src="/static/images/verbal_comprehension.png" alt="Verbal Comprehension" 
+             onload="showStatus('vc', true)" onerror="showStatus('vc', false)" />
+        <div id="vc-status" class="status"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Perceptual Reasoning</h3>
+        <img src="/static/images/perceptual_reasoning.png" alt="Perceptual Reasoning" 
+             onload="showStatus('pr', true)" onerror="showStatus('pr', false)" />
+        <div id="pr-status" class="status"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Working Memory</h3>
+        <img src="/static/images/working_memory.png" alt="Working Memory" 
+             onload="showStatus('wm', true)" onerror="showStatus('wm', false)" />
+        <div id="wm-status" class="status"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Processing Speed</h3>
+        <img src="/static/images/processing_speed.png" alt="Processing Speed" 
+             onload="showStatus('ps', true)" onerror="showStatus('ps', false)" />
+        <div id="ps-status" class="status"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Fluid Reasoning</h3>
+        <img src="/static/images/fluid_reasoning.png" alt="Fluid Reasoning" 
+             onload="showStatus('fr', true)" onerror="showStatus('fr', false)" />
+        <div id="fr-status" class="status"></div>
+    </div>
+    
+    <script>
+        function showStatus(id, success) {
+            const statusEl = document.getElementById(id + '-status');
+            if (success) {
+                statusEl.textContent = '✅ Image loaded successfully';
+                statusEl.className = 'status success';
+            } else {
+                statusEl.textContent = '❌ Failed to load image';
+                statusEl.className = 'status error';
+            }
+        }
+    </script>
+</body>
+</html>

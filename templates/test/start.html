@@ -31,6 +31,43 @@
         min-height: 400px;
     }
     
+    .current-category-indicator {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+    
+    .category-indicator-image {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 8px;
+    }
+    
+    .category-indicator-text {
+        flex: 1;
+    }
+    
+    .category-indicator-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 0;
+    }
+    
+    .category-indicator-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin: 0;
+    }
+    
     .question-container {
         margin-bottom: 2rem;
     }
@@ -294,6 +331,10 @@ let currentCategoryIndex = 0;
 let categoryProgress = {};
 const questionsPerCategory = 3;
 
+// Category images from Flask backend (properly URL encoded)
+const categoryImages = {{ category_images|tojson }};
+console.log('🖼️ Category images loaded:', categoryImages);
+
 // Initialize category progress for default categories (will be updated with randomized order)
 const defaultCategories = ['Verbal Comprehension', 'Perceptual Reasoning', 'Working Memory', 'Processing Speed', 'Fluid Reasoning'];
 defaultCategories.forEach(category => {
@@ -319,13 +360,16 @@ async function loadQuestions() {
         const response = await fetch('/test/get_questions');
         const data = await response.json();
         
+        console.log('🔍 Server response data:', data);
+        
         if (data.category_order && data.category_order.length > 0) {
             // Use the randomized category order from server
             window.randomizedCategories = data.category_order;
             console.log('🔀 Randomized category order:', window.randomizedCategories);
         } else {
             // Fallback to default order
-            window.randomizedCategories = categories;
+            window.randomizedCategories = defaultCategories;
+            console.log('🔄 Using default categories:', window.randomizedCategories);
         }
         
         // Initialize empty questions array for the adaptive system
@@ -338,6 +382,7 @@ async function loadQuestions() {
         document.getElementById('total-questions').textContent = window.randomizedCategories.length * questionsPerCategory;
         
         // Start first category with transition animation (no landing page)
+        console.log('🎬 About to show transition for first category:', window.randomizedCategories[currentCategoryIndex]);
         await showCategoryTransition(window.randomizedCategories[currentCategoryIndex]);
         startCategoryQuestions();
     } catch (error) {
@@ -352,23 +397,25 @@ async function showCategoryTransition(categoryName) {
     
     const questionContainer = document.getElementById('question-container');
     const categoryIndex = currentCategoryIndex + 1;
-    const totalCategories = window.randomizedCategories ? window.randomizedCategories.length : categories.length;
+    const totalCategories = window.randomizedCategories ? window.randomizedCategories.length : defaultCategories.length;
     
-    // Category icons mapping
-    const categoryIcons = {
-        'Verbal Comprehension': '🗣️',
-        'Perceptual Reasoning': '🧩', 
-        'Working Memory': '🧠',
-        'Processing Speed': '⚡',
-        'Fluid Reasoning': '💡'
-    };
-    
-    const icon = categoryIcons[categoryName] || '🎯';
+    // Use the image URLs provided by Flask backend
+    const imageUrl = categoryImages[categoryName] || categoryImages['Verbal Comprehension'];
+    console.log(`🖼️ Using image: ${imageUrl} for category: ${categoryName}`);
     
     // Show transition animation
     questionContainer.innerHTML = `
         <div class="category-transition" style="text-align: center; padding: 3rem; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <div class="transition-icon" style="font-size: 4rem; margin-bottom: 1rem; animation: bounce 1s ease-in-out infinite;">${icon}</div>
+            <div class="transition-image" style="margin-bottom: 2rem;">
+                <img src="${imageUrl}" 
+                     alt="${categoryName}" 
+                     style="width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)); animation: bounce 1s ease-in-out infinite; background: rgba(102, 126, 234, 0.1); border-radius: 10px; padding: 10px;" 
+                     onerror="console.error('❌ Image load failed: ${imageUrl}'); this.style.display='none'; this.nextElementSibling.style.display='block';" 
+                     onload="console.log('✅ Image loaded successfully: ${imageUrl}'); this.nextElementSibling.style.display='none';" />
+                <img src="/static/images/testmyiq_logo.png" 
+                     alt="TestMyIQ Logo" 
+                     style="display: none; width: 120px; height: 120px; object-fit: contain; animation: bounce 1s ease-in-out infinite; background: rgba(102, 126, 234, 0.1); border-radius: 10px; padding: 10px;" />
+            </div>
             <h2 style="color: #667eea; margin-bottom: 0.5rem; opacity: 0; animation: fadeInUp 0.8s ease-out 0.3s forwards;">${categoryName}</h2>
             <div style="color: #666; font-size: 1.1rem; opacity: 0; animation: fadeInUp 0.8s ease-out 0.6s forwards;">Category ${categoryIndex} of ${totalCategories}</div>
             <div class="loading-dots" style="margin-top: 2rem;">
@@ -422,6 +469,92 @@ transitionStyles.textContent = `
         margin: 0 0.2rem;
         display: inline-block;
     }
+    
+    /* Responsive category transition images */
+    @media (max-width: 768px) {
+        .transition-image img {
+            width: 100px !important;
+            height: 100px !important;
+        }
+        
+        .category-transition h2 {
+            font-size: 1.8rem !important;
+        }
+        
+        .current-category-indicator {
+            padding: 0.75rem 1rem !important;
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 0.5rem !important;
+        }
+        
+        .category-indicator-image {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        
+        .category-indicator-title {
+            font-size: 1rem !important;
+        }
+        
+        .category-indicator-subtitle {
+            font-size: 0.8rem !important;
+        }
+        
+        /* Logo responsive sizing */
+        .transition-image img[src*="testmyiq_logo"] {
+            width: 100px !important;
+            height: 100px !important;
+        }
+        
+        .current-category-indicator img[src*="testmyiq_logo"] {
+            width: 40px !important;
+            height: 40px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .transition-image img {
+            width: 80px !important;
+            height: 80px !important;
+        }
+        
+        .category-transition h2 {
+            font-size: 1.5rem !important;
+        }
+        
+        .category-transition div {
+            font-size: 1rem !important;
+        }
+        
+        .current-category-indicator {
+            padding: 0.5rem !important;
+        }
+        
+        .category-indicator-image {
+            width: 32px !important;
+            height: 32px !important;
+        }
+        
+        .category-indicator-title {
+            font-size: 0.9rem !important;
+        }
+        
+        .category-indicator-subtitle {
+            font-size: 0.75rem !important;
+        }
+        
+        /* Logo responsive sizing for mobile */
+        .transition-image img[src*="testmyiq_logo"] {
+            width: 80px !important;
+            height: 80px !important;
+        }
+        
+        .current-category-indicator img[src*="testmyiq_logo"] {
+            width: 32px !important;
+            height: 32px !important;
+        }
+    }
 `;
 document.head.appendChild(transitionStyles);
 
@@ -463,6 +596,22 @@ async function startCategoryQuestions() {
     }
 }
 
+// Get category progress helper
+function getCategoryProgress(categoryName) {
+    const progress = categoryProgress[categoryName] || {
+        questionsAnswered: 0,
+        difficulty: 'easy',
+        correctAnswers: 0,
+        introduced: false
+    };
+    
+    return {
+        answered: progress.questionsAnswered,
+        correct: progress.correctAnswers,
+        performance: progress.questionsAnswered > 0 ? progress.correctAnswers / progress.questionsAnswered : 0
+    };
+}
+
 // Display current question
 function displayQuestion(index) {
     const question = questions[index];
@@ -481,13 +630,28 @@ function displayQuestion(index) {
 // Display multiple choice questions
 function displayMultipleChoiceQuestion(question, index) {
     const container = document.getElementById('question-container');
+    const categoryImageUrl = categoryImages[question.category] || categoryImages['Verbal Comprehension'];
+    const categoryProgress = getCategoryProgress(question.category);
     
     let html = `
+        <div class="current-category-indicator">
+            <img src="${categoryImageUrl}" 
+                 alt="${question.category}" 
+                 class="category-indicator-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" 
+                 onload="this.nextElementSibling.style.display='none';" />
+            <img src="/static/images/testmyiq_logo.png" 
+                 alt="TestMyIQ Logo" 
+                 style="display: none; width: 48px; height: 48px; object-fit: contain; background: rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 8px;" />
+            <div class="category-indicator-text">
+                <div class="category-indicator-title">${question.category}</div>
+                <div class="category-indicator-subtitle">Question ${categoryProgress.answered + 1} of ${questionsPerCategory} in this domain</div>
+            </div>
+        </div>
         <div class="question-container">
             <div class="question-header">
                 <h3>Question ${index + 1}</h3>
                 <div class="question-meta">
-                    <span class="category-badge">${question.category}</span>
                     <span class="difficulty-badge difficulty-${question.difficulty}">${question.difficulty.toUpperCase()}</span>
                 </div>
             </div>
@@ -523,6 +687,8 @@ function displayMultipleChoiceQuestion(question, index) {
 // Display digit span questions (memory tests)
 function displayDigitSpanQuestion(question, index) {
     const container = document.getElementById('question-container');
+    const categoryImageUrl = categoryImages[question.category] || categoryImages['Verbal Comprehension'];
+    const categoryProgress = getCategoryProgress(question.category);
     
     // Generate random sequence based on length
     const length = question.length || 4;
@@ -530,11 +696,24 @@ function displayDigitSpanQuestion(question, index) {
     const displayTime = question.displayTime || 3000;
     
     let html = `
+        <div class="current-category-indicator">
+            <img src="${categoryImageUrl}" 
+                 alt="${question.category}" 
+                 class="category-indicator-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" 
+                 onload="this.nextElementSibling.style.display='none';" />
+            <img src="/static/images/testmyiq_logo.png" 
+                 alt="TestMyIQ Logo" 
+                 style="display: none; width: 48px; height: 48px; object-fit: contain; background: rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 8px;" />
+            <div class="category-indicator-text">
+                <div class="category-indicator-title">${question.category}</div>
+                <div class="category-indicator-subtitle">Question ${categoryProgress.answered + 1} of ${questionsPerCategory} in this domain</div>
+            </div>
+        </div>
         <div class="question-container digit-span-container">
             <div class="question-header">
                 <h3>Question ${index + 1}</h3>
                 <div class="question-meta">
-                    <span class="category-badge">${question.category}</span>
                     <span class="difficulty-badge difficulty-${question.difficulty}">${question.difficulty.toUpperCase()}</span>
                 </div>
             </div>

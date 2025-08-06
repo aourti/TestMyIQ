@@ -268,6 +268,54 @@
         margin: 0;
     }
     
+    /* Cognitive domains styling */
+    .cognitive-domains {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .domain-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .domain-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+        transform: translateX(10px);
+    }
+    
+    .domain-icon {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        flex-shrink: 0;
+    }
+    
+    .domain-item div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .domain-item strong {
+        color: #333;
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+    
+    .domain-item span {
+        color: #666;
+        font-size: 0.9em;
+    }
+    
     /* Leaderboard preview */
     .leaderboard-preview {
         background: #f8f9fa;
@@ -323,6 +371,39 @@
         
         .user-stats {
             grid-template-columns: 1fr 1fr;
+        }
+        
+        .domain-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .domain-item {
+            padding: 0.75rem;
+        }
+        
+        .domain-item:hover {
+            transform: translateX(5px);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .domain-icon {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .domain-item {
+            padding: 0.5rem;
+            gap: 0.75rem;
+        }
+        
+        .domain-item strong {
+            font-size: 1em;
+        }
+        
+        .domain-item span {
+            font-size: 0.8em;
         }
     }
 </style>
@@ -381,7 +462,19 @@
     <!-- Quick Actions -->
     <div class="quick-actions">
         <div class="action-card primary" onclick="window.location.href='{{ url_for('test.start') }}'">
-            <div class="icon">🧠</div>
+            <div class="icon" style="display: flex; align-items: center; justify-content: center; height: 70px;">
+                <!-- Try logo first, fallback to styled text -->
+                <img id="homepage-logo" 
+                     src="{{ url_for('static', filename='images/testmyiq_logo.png') }}" 
+                     alt="TestMyIQ Logo" 
+                     style="max-width: 60px; max-height: 60px; object-fit: contain;" 
+                     onload="console.log('✅ Homepage logo loaded'); document.getElementById('homepage-fallback').style.display='none';"
+                     onerror="console.log('⚠️ Using text fallback'); this.style.display='none'; document.getElementById('homepage-fallback').style.display='flex';" />
+                <div id="homepage-fallback" style="display: none; flex-direction: column; align-items: center; color: white; font-weight: bold;">
+                    <div style="font-size: 24px; margin-bottom: 4px;">TestMyIQ</div>
+                    <div style="font-size: 12px; opacity: 0.8;">.ai</div>
+                </div>
+            </div>
             <h3>Start New Test</h3>
             <p>Begin your adaptive IQ assessment</p>
         </div>
@@ -461,13 +554,43 @@
         <p style="font-size: 1.1em; line-height: 1.6; color: #555; margin-bottom: 20px;">
             This comprehensive assessment measures five key cognitive domains:
         </p>
-        <ul style="list-style: none; padding-left: 0;">
-            <li style="margin: 10px 0;">✓ <strong>Verbal Comprehension</strong> - Language and verbal reasoning</li>
-            <li style="margin: 10px 0;">✓ <strong>Perceptual Reasoning</strong> - Visual-spatial processing</li>
-            <li style="margin: 10px 0;">✓ <strong>Working Memory</strong> - Information retention and manipulation</li>
-            <li style="margin: 10px 0;">✓ <strong>Processing Speed</strong> - Cognitive efficiency</li>
-            <li style="margin: 10px 0;">✓ <strong>Fluid Reasoning</strong> - Novel problem solving</li>
-        </ul>
+        <div class="cognitive-domains">
+            <div class="domain-item">
+                <img src="{{ url_for('static', filename='images/verbal_comprehension.png') }}" alt="Verbal Comprehension" class="domain-icon" />
+                <div>
+                    <strong>Verbal Comprehension</strong>
+                    <span>Language and verbal reasoning</span>
+                </div>
+            </div>
+            <div class="domain-item">
+                <img src="{{ url_for('static', filename='images/perceptual_reasoning.png') }}" alt="Perceptual Reasoning" class="domain-icon" />
+                <div>
+                    <strong>Perceptual Reasoning</strong>
+                    <span>Visual-spatial processing</span>
+                </div>
+            </div>
+            <div class="domain-item">
+                <img src="{{ url_for('static', filename='images/working_memory.png') }}" alt="Working Memory" class="domain-icon" />
+                <div>
+                    <strong>Working Memory</strong>
+                    <span>Information retention and manipulation</span>
+                </div>
+            </div>
+            <div class="domain-item">
+                <img src="{{ url_for('static', filename='images/processing_speed.png') }}" alt="Processing Speed" class="domain-icon" />
+                <div>
+                    <strong>Processing Speed</strong>
+                    <span>Cognitive efficiency</span>
+                </div>
+            </div>
+            <div class="domain-item">
+                <img src="{{ url_for('static', filename='images/fluid_reasoning.png') }}" alt="Fluid Reasoning" class="domain-icon" />
+                <div>
+                    <strong>Fluid Reasoning</strong>
+                    <span>Novel problem solving</span>
+                </div>
+            </div>
+        </div>
     </div>
     
     {% if current_user.is_authenticated and leaderboard %}

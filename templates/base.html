@@ -44,8 +44,16 @@
         }
         
         .navbar-brand::before {
-            content: '🧠';
-            font-size: 1.5rem;
+            content: '';
+            background-image: url("{{ url_for('static', filename='images/testmyiq_logo.png') }}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
         }
         
         .nav-link {
@@ -310,7 +318,11 @@
     <!-- Page Loader -->
     <div class="page-loader" id="pageLoader">
         <div class="loader-brain">
-            <span style="font-size: 80px;">🧠</span>
+            <img src="{{ url_for('static', filename='images/testmyiq_logo.png') }}" 
+                 alt="TestMyIQ Logo" 
+                 style="width: 80px; height: 80px; object-fit: contain; animation: pulse 2s ease-in-out infinite;" 
+                 onload="console.log('✅ Logo loaded in page loader')"
+                 onerror="console.error('❌ Logo failed in page loader'); this.outerHTML='<span style=\\'font-size: 80px;\\'>🧠</span>';" />
         </div>
     </div>
     

@@ -162,25 +162,42 @@
 
     <div class="category-details">
         <h3>Category Performance</h3>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Questions Attempted</th>
-                        <th>Success Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for stat in category_stats %}
-                    <tr>
-                        <td>{{ stat.category }}</td>
-                        <td>{{ stat.attempts }}</td>
-                        <td>{{ "%.1f"|format(stat.success_rate * 100) }}%</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="category-performance-grid">
+            {% for stat in category_stats %}
+            <div class="category-performance-card">
+                <div class="category-header">
+                    <div class="category-image-container">
+                        {% if stat.category == 'Verbal Comprehension' %}
+                            <img src="{{ url_for('static', filename='images/verbal_comprehension.png') }}" alt="Verbal Comprehension" class="category-icon" />
+                        {% elif stat.category == 'Perceptual Reasoning' %}
+                            <img src="{{ url_for('static', filename='images/perceptual_reasoning.png') }}" alt="Perceptual Reasoning" class="category-icon" />
+                        {% elif stat.category == 'Working Memory' %}
+                            <img src="{{ url_for('static', filename='images/working_memory.png') }}" alt="Working Memory" class="category-icon" />
+                        {% elif stat.category == 'Processing Speed' %}
+                            <img src="{{ url_for('static', filename='images/processing_speed.png') }}" alt="Processing Speed" class="category-icon" />
+                        {% elif stat.category == 'Fluid Reasoning' %}
+                            <img src="{{ url_for('static', filename='images/fluid_reasoning.png') }}" alt="Fluid Reasoning" class="category-icon" />
+                        {% endif %}
+                    </div>
+                    <h4>{{ stat.category }}</h4>
+                </div>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Questions</span>
+                        <span class="stat-value">{{ stat.attempts }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Success Rate</span>
+                        <span class="stat-value">{{ "%.1f"|format(stat.success_rate * 100) }}%</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ stat.success_rate * 100 }}%"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>

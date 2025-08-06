@@ -32,6 +32,41 @@ def get_questions():
         'category_order': categories  # Return the randomized category order
     })
 
+@test_bp.route('/image_test')
+def image_test():
+    return render_template('test/image_test.html')
+
+@test_bp.route('/logo_test')
+def logo_test():
+    return render_template('test/logo_test.html')
+
+@test_bp.route('/debug_logo')
+def debug_logo():
+    return render_template('debug_logo.html')
+
+@test_bp.route('/simple_test')
+def simple_test():
+    return render_template('test/simple_test.html')
+
+@test_bp.route('/debug_images')
+def debug_images():
+    import os
+    static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'images')
+    images = []
+    if os.path.exists(static_path):
+        for file in os.listdir(static_path):
+            if file.endswith('.png'):
+                images.append({
+                    'filename': file,
+                    'url': f'/static/images/{file}',
+                    'url_encoded': f'/static/images/{file.replace(" ", "%20")}'
+                })
+    return jsonify({
+        'static_path': static_path,
+        'images': images,
+        'total_images': len(images)
+    })
+
 @test_bp.route('/get_adaptive_question', methods=['POST'])
 def get_adaptive_question():
     data = request.get_json()
@@ -176,7 +211,18 @@ def start():
     db.session.add(session)
     db.session.commit()
     
-    return render_template('test/start.html', session_id=session.id)
+    # Prepare category image URLs using url_for to handle spaces correctly
+    from flask import url_for
+    category_images = {
+        'Verbal Comprehension': url_for('static', filename='images/verbal_comprehension.png'),
+        'Perceptual Reasoning': url_for('static', filename='images/perceptual_reasoning.png'),
+        'Working Memory': url_for('static', filename='images/working_memory.png'),
+        'Processing Speed': url_for('static', filename='images/processing_speed.png'),
+        'Fluid Reasoning': url_for('static', filename='images/fluid_reasoning.png'),
+        'TestMyIQ Logo': url_for('static', filename='images/testmyiq_logo.png')
+    }
+    
+    return render_template('test/start.html', session_id=session.id, category_images=category_images)
 
 @test_bp.route('/submit_answer', methods=['POST'])
 @login_required

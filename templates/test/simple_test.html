@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Image Test</title>
+</head>
+<body>
+    <h1>Direct Image Test</h1>
+    
+    <h3>Test 1: Working Memory (with spaces)</h3>
+    <img src="/static/images/working memory.png" alt="Working Memory" style="width: 100px; height: 100px; border: 1px solid red;" 
+         onload="console.log('✅ Working Memory loaded')" 
+         onerror="console.error('❌ Working Memory failed')">
+    
+    <h3>Test 2: Working Memory (URL encoded)</h3>
+    <img src="/static/images/working%20memory.png" alt="Working Memory Encoded" style="width: 100px; height: 100px; border: 1px solid green;" 
+         onload="console.log('✅ Working Memory encoded loaded')" 
+         onerror="console.error('❌ Working Memory encoded failed')">
+    
+    <h3>Test 3: Via JavaScript</h3>
+    <div id="js-test"></div>
+    
+    <script>
+        console.log('Starting JavaScript image test...');
+        const container = document.getElementById('js-test');
+        
+        const img = document.createElement('img');
+        img.src = '/static/images/working%20memory.png';
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.border = '1px solid blue';
+        img.onload = () => {
+            console.log('✅ JavaScript image loaded successfully');
+            container.appendChild(img);
+        };
+        img.onerror = () => {
+            console.error('❌ JavaScript image failed to load');
+            container.innerHTML = '<p style="color: red;">Image failed to load</p>';
+        };
+    </script>
+</body>
+</html>

@@ -115,6 +115,98 @@
     margin-bottom: 1rem;
 }
 
+/* Category Performance Grid */
+.category-performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.category-performance-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.category-performance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.category-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.category-header h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.category-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.progress-container {
+    margin-top: 1rem;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
 .table-responsive {
     overflow-x: auto;
 }
@@ -171,5 +263,53 @@
     .col-md-8 {
         flex: 0 0 66.666667%;
         max-width: 66.666667%;
+    }
+}
+
+/* Responsive Design for Category Performance */
+@media (max-width: 768px) {
+    .category-performance-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .category-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .category-header h4 {
+        font-size: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-performance-card {
+        padding: 1rem;
+    }
+    
+    .category-header {
+        gap: 0.75rem;
+    }
+    
+    .category-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .category-header h4 {
+        font-size: 0.95rem;
+    }
+    
+    .stat-value {
+        font-size: 1.1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
     }
 }
